@@ -1,0 +1,37 @@
+/* 1. 전체 바 디자인 */
+.navbar {
+    background-color: #333; /* 어두운 배경색 */
+    overflow: hidden; /* float 해제 */
+    position: fixed; /* 화면 상단에 고정 */
+    top: 0; /* 상단에서 0px 위치 */
+    width: 100%; /* 너비를 화면 전체로 설정 */
+    z-index: 1000; /* 다른 요소 위에 표시 */
+}
+
+/* 2. 목록 스타일 제거 및 정렬 */
+.navbar ul {
+    list-style-type: none; /* 목록 앞에 붙는 점/기호 제거 */
+    margin: 0;
+    padding: 0;
+    text-align: center; /* 링크들을 가운데 정렬 */
+}
+
+/* 3. 각 항목을 가로로 배치 */
+.navbar li {
+    display: inline-block; /* 항목을 가로로 나열 */
+}
+
+/* 4. 링크(버튼) 스타일 */
+.navbar li a {
+    display: block; /* 링크 전체 영역을 버튼처럼 사용 */
+    color: white; /* 글자색 */
+    text-align: center;
+    padding: 14px 20px; /* 내부 여백으로 버튼 크기 조절 */
+    text-decoration: none; /* 밑줄 제거 */
+    transition: background-color 0.3s; /* 마우스 오버 시 부드러운 전환 효과 */
+}
+
+/* 5. 마우스 오버(Hover) 효과 */
+.navbar li a:hover {
+    background-color: #555; /* 마우스를 올렸을 때 색상 변경 */
+}
