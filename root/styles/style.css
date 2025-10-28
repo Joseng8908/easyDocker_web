@@ -7,6 +7,8 @@
 
 /* 2. HTML과 BODY 요소 너비 강제 설정 */
 html, body {
+    margin: 0 !important; /* !important를 사용하여 다른 스타일보다 우선하도록 강제 */
+    padding: 0;
     width: 100%;
     height: 100%;
 }
