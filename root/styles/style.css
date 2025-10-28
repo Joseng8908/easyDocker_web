@@ -49,3 +49,38 @@ html, body {
 .navbar li a:hover {
     background-color: #555; /* 마우스를 올렸을 때 색상 변경 */
 }
+
+/* 1. 로고 링크 컨테이너 스타일 */
+.navbar .logo-link {
+    /* 내비게이션 바 기준으로 위치를 잡기 위해 absolute 사용 */
+    position: absolute; 
+    left: 15px; /* 왼쪽에서 15px 띄우기 (여백) */
+    top: 50%; /* 내비게이션 바의 중앙으로 이동 (수직 중앙 정렬 준비) */
+    transform: translateY(-50%); /* 정확한 수직 중앙 정렬 */
+    padding: 0; /* 링크의 기본 패딩 제거 */
+}
+
+/* 2. 이미지 크기 설정 */
+.navbar .github-logo {
+    height: 30px; /* 원하는 이미지 높이로 설정 */
+    width: auto; /* 비율 유지 */
+    /* 이미지 모서리가 날카로울 경우, 부드럽게 만들기 */
+    border-radius: 5px; 
+}
+
+/* 3. 목록을 로고 오른쪽으로 밀기 */
+.navbar ul {
+    /* 로고가 들어갈 공간을 확보하기 위해 마진 추가 */
+    margin-left: 60px; /* 로고 크기(약 30px) + 여백(15px) + 추가 여백 */
+    
+    list-style-type: none; 
+    padding: 0;
+    text-align: center; /* 기존 링크는 여전히 중앙 정렬 유지 */
+}
+
+/* 4. 내비게이션 바의 z-index 유지 */
+.navbar {
+    /* 기존 스타일 유지 */
+    z-index: 1000;
+    /* ... 기타 스타일 ... */
+}
