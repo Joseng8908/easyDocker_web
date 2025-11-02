@@ -3,19 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="root/styles/style.css">
-    <title>Botory</title>
+    <title>Dockerfile Generator</title>
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <a href="https://github.com/joseng8908/botory_website" class="logo-link">
-            <img src="root/images/github-logo.png" alt="GitHub Repository" class="github-logo">
-        </a>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">Instruction</a></li>
-            <li><a href="#services">Service</a></li>
-        </ul>
-    </nav>
+    <header>
+        <h1>🐳 Dockerfile 생성 마법사</h1>
+        <p>Docker 초보자를 위한 단계별 Dockerfile 자동 생성 웹앱입니다.</p>
+    </header>
+
+    <main class="app-container">
+        <section class="config-panel">
+            <h2>설정 입력</h2>
+            <div id="step-container">
+                </div>
+            
+            <div class="action-buttons">
+                <button id="prev-step" disabled>이전</button>
+                <button id="next-step">다음</button>
+            </div>
+        </section>
+
+        <section class="preview-panel">
+            <h2>코드 미리보기</h2>
+            <div id="code-preview">
+                <pre><code id="dockerfile-code">// Dockerfile 코드가 실시간으로 여기에 표시됩니다.</code></pre>
+            </div>
+            
+            <div class="result-actions">
+                <button id="copy-code">코드 복사</button>
+                <button id="download-files">파일 다운로드</button>
+            </div>
+        </section>
+    </main>
+    
+    <script type="module" src="./src/main.js"></script>
 </body>
 </html>
