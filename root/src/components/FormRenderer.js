@@ -1,7 +1,7 @@
 // ===========================================
 // src/components/FormRenderer.js
 // ===========================================
-import { validateStep1 } from '../utils/validator.js';
+import { validateStep1, validateStep2 } from '../utils/validator.js';
 
 export class FormRenderer {
     constructor(stepContainerId, configData, updateCallback, setNextButtonStateCallback) {
