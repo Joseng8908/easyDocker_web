@@ -49,7 +49,8 @@ export class FormRenderer {
     // Step 1: 프로젝트 기본 정보 폼
     // ===========================================
     renderStep1() {
-        // 모던 JS의 Template Literals (백틱)을 사용하여 HTML 문자열 생성
+        //디버그용 콘솔 출력
+        console.log("Rendering Step 1 Form");
         const html = `
             <h3>Step 1. 프로젝트 기본 정보</h3>
             <div class="form-group">
@@ -94,6 +95,8 @@ export class FormRenderer {
     // Step 2: Dockerfile 세부 설정 폼 (💡 새로 추가)
     // ===========================================
     renderStep2() {
+        //디버그용 콘솔 출력
+        console.log("Rendering Step 2 Form");
         const html = `
             <h3>Step 2. Dockerfile 세부 설정</h3>
             <div class="form-group">
