@@ -47,7 +47,7 @@ export class TemplateGenerator {
         // step 2 값 적용
         const finalWorkDir = workDir || '/app';
         const finalInstallCommand = installCommandOverride || installCommand;
-
+        const finalCopyPath = step2.copyPath || '.';
         // 2. 모던 JS의 Template Literals을 사용한 Dockerfile 생성
         // 백틱(`)을 사용하고 ${변수}로 데이터를 삽입합니다.
         const dockerfile = `
@@ -64,14 +64,14 @@ WORKDIR ${finalWorkDir}
 # Step 2: 코드 복사 및 의존성 설치
 # ----------------------------------------------------
 # 의존성 파일만 먼저 복사 (캐싱 최적화)
-COPY package*.json ./ 
-# 또는 Python의 경우: COPY requirements.txt ./
+COPY package*.json ${finalCopyPath}  # Node.js의 경우
+# 또는 Python의 경우: COPY requirements.txt ${finalCopyPath}
 
 # 의존성 설치 명령
 RUN ${finalInstallCommand}
 
 # 전체 프로젝트 파일 복사
-COPY . .
+COPY . ${finalCopyPath}
 
 # 💡 RUN USER 설정 (Step 2 반영, 값이 있을 경우에만 추가)
 ${runUser ? `USER ${runUser}` : '# USER 명령어를 추가하여 권한을 낮출 수 있습니다.'}
