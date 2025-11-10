@@ -75,6 +75,7 @@ function renderCurrentStep() {
     
     // 버튼 상태 업데이트 로직 (기존과 동일)
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
+    const prevButton = document.getElementById(PREV_BUTTON_ID);
     prevButton.disabled = state.currentStep === 1;
 
     // '다음' 버튼 상태는 현재 단계의 유효성 검사 결과에 따라 결정
