@@ -126,7 +126,7 @@ export class FormRenderer {
                 if (errors[fieldName]) {
                     // 에러가 있을 경우 에러 메시지를 표시
                     errorElement.textContent = errors[fieldName];
-                    errorElement
+                    errorElement.style.display = 'block';
                     inputElement.classList.add('is-invalid');
                     } else{
                         // 에러가 없을 경우 에러 메시지 제거
@@ -148,13 +148,13 @@ export class FormRenderer {
     validateForNextStep() {
         if (this.config.currentStep === 1) {
             return  this.validateAndShowFeedback(this.config.step1);
+        }
         // else if (this.config.currentStep === 2) {
         //     return this.validateAndShowFeedback(this.config.step2);
         // } else if (this.config.currentStep === 3) {
         //     return this.validateAndShowFeedback(this.config.step3);
         // } else if (this.config.currentStep === 4) {
         //     return this.validateAndShowFeedback(this.config.step4);
-        return true;
-        }
+        return true; // 기본값으로 true 반환       
     }
 }
