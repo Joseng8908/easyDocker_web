@@ -4,7 +4,7 @@
 import { validateStep1 } from '../utils/validator.js';
 
 export class FormRenderer {
-    constructor(stepContainerId, configData, updateCallback) {
+    constructor(stepContainerId, configData, updateCallback, setNextButtonStateCallback) {
         // 폼이 렌더링될 HTML 요소 ID
         this.container = document.getElementById(stepContainerId);
         // 앱의 전체 설정 상태 (main.js에서 공유)
