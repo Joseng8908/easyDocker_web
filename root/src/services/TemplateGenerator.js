@@ -10,12 +10,15 @@ export class TemplateGenerator {
      */
     static generateDockerfile(configData) {
         const step1 = configData.step1 || {}; // Step 1 데이터 가져오기
+        const step2 = configData.step2 || {}; // Step 2 데이터 가져오기 (추후 사용 가능)
+        // const step3 = configData.step3 || {}; // Step 3 데이터 가져오기 (추후 사용 가능)
+
         const { language, version, port } = step1;
+        const { workDir, installCommandOverride, runUser } = step2;
         
         let baseImage = '';
         let installCommand = '';
         let startCommand = '';
-        let workDir = '/app'; // 기본 작업 디렉토리
 
         // 1. 언어별 기본 이미지 및 명령어 설정
         switch (language) {
@@ -41,6 +44,10 @@ export class TemplateGenerator {
                 startCommand = '# Define your start command here';
         }
 
+        // step 2 값 적용
+        const finalWorkDir = workDir || '/app';
+        const finalInstallCommand = installCommandOverride || installCommand;
+
         // 2. 모던 JS의 Template Literals을 사용한 Dockerfile 생성
         // 백틱(`)을 사용하고 ${변수}로 데이터를 삽입합니다.
         const dockerfile = `
@@ -65,6 +72,9 @@ RUN ${installCommand}
 
 # 전체 프로젝트 파일 복사
 COPY . .
+
+# 💡 RUN USER 설정 (Step 2 반영, 값이 있을 경우에만 추가)
+${runUser ? `USER ${runUser}` : '# USER 명령어를 추가하여 권한을 낮출 수 있습니다.'}
 
 # ----------------------------------------------------
 # Step 3: 포트 및 실행 명령어 설정

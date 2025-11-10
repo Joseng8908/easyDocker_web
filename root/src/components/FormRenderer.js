@@ -30,10 +30,8 @@ export class FormRenderer {
     render(step) {
         this.container.innerHTML = ''; // 기존 내용 초기화
         
-        if (step === 1) {
-            this.renderStep1();
-        } 
-        // else if (step === 2) { this.renderStep2(); } // 추후 확장
+        if (step === 1) { this.renderStep1();} 
+        else if (step === 2) { this.renderStep2(); }
         // else if (step === 3) { this.renderStep3(); } // 추후 확장
         // else if (step === 4) { this.renderStep4(); } // 추후 확장
     }
@@ -116,6 +114,16 @@ export class FormRenderer {
      * 유효성 검사를 실행하고, 에러 메시지를 표시하며, 버튼 상태를 업데이트합니다.
      */
     validateAndShowFeedback(data) {
+        let validationResult;
+
+        if(step === 1) {
+            validationResult = validateStep1(data);
+        } else if(step === 2) {
+            validationResult = validateStep2(data);
+        } else {
+            validationResult = { isValid: true, errors: {} }
+        }
+
         const { isValid, errors } = validateStep1(data);
 
         Object.keys(data).forEach(fieldName => {
@@ -136,9 +144,9 @@ export class FormRenderer {
                     }
                 }
             });
-    // main.js의 콜백을 호출하여 '다음' 버튼 상태 업데이트
-    this.setNextButtonStateCallback(isValid);
-    return isValid;
+        // main.js의 콜백을 호출하여 '다음' 버튼 상태 업데이트
+        this.setNextButtonStateCallback(isValid);
+        return isValid;
     }
 
     /**
@@ -149,12 +157,12 @@ export class FormRenderer {
         if (this.config.currentStep === 1) {
             return  this.validateAndShowFeedback(this.config.step1);
         }
-        // else if (this.config.currentStep === 2) {
-        //     return this.validateAndShowFeedback(this.config.step2);
-        // } else if (this.config.currentStep === 3) {
-        //     return this.validateAndShowFeedback(this.config.step3);
-        // } else if (this.config.currentStep === 4) {
-        //     return this.validateAndShowFeedback(this.config.step4);
+        else if (this.config.currentStep === 2) {
+            return this.validateAndShowFeedback(this.config.step2);
+        } else {
+            return true;
+        }
         return true; // 기본값으로 true 반환       
     }
+
 }

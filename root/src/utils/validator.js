@@ -40,3 +40,18 @@ export function validateStep1(step1Data) {
 
     return {isValid, errors};
 }
+
+/**
+ * Step 2의 세부 정보에 대한 유효성 검사를 수행합니다.
+ * (현재는 필수 필드가 없으므로 항상 유효함을 반환)
+ * @param {Object} step2Data - state.configData의 step2 객체
+ * @returns {{isValid: boolean, errors: { [key: string]: string }}} 
+ */
+
+export function validateStep2(step2Data) {
+    const errors = {};
+    let isValid = true;
+    
+    // 현재 Step 2에는 필수 필드가 없으므로 항상 유효함을 반환
+    return { isValid, errors };
+}
