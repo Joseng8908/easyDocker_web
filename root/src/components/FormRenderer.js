@@ -102,21 +102,21 @@ export class FormRenderer {
             <div class="form-group">
                 <label for="workDir">📁 작업 디렉토리 (WORKDIR):</label>
                 <input type="text" id="workDir" name="workDir" 
-                       value="${this.config.step2.workDir}" placeholder="/app">
+                       value="${this.config.step2.workDir || ''}" placeholder="/app">
                 <small class="error-message" id="error-workDir"></small>
             </div>
             
             <div class="form-group">
                 <label for="copyPath">📄 프로젝트 복사 경로 (COPY . [경로]):</label>
                 <input type="text" id="copyPath" name="copyPath" 
-                       value="${this.config.step2.copyPath}" placeholder=".">
+                       value="${this.config.step2.copyPath || ''}" placeholder=".">
                 <small class="error-message" id="error-copyPath"></small>
             </div>
 
             <div class="form-group">
                 <label for="installCommandOverride">⚙️ 설치 명령어 오버라이드 (RUN):</label>
                 <input type="text" id="installCommandOverride" name="installCommandOverride" 
-                       value="${this.config.step2.installCommandOverride}" 
+                       value="${this.config.step2.installCommandOverride || ''}" 
                        placeholder="예: npm install --production">
                 <small class="error-message" id="error-installCommandOverride"></small>
             </div>
@@ -124,7 +124,7 @@ export class FormRenderer {
             <div class="form-group">
                 <label for="runUser">👤 사용자 설정 (USER):</label>
                 <input type="text" id="runUser" name="runUser" 
-                       value="${this.config.step2.runUser}" 
+                       value="${this.config.step2.runUser || ''}" 
                        placeholder="예: node (루트 권한 사용 방지)">
                 <small class="error-message" id="error-runUser"></small>
             </div>
@@ -155,10 +155,20 @@ export class FormRenderer {
      * @param {Event} e - 이벤트 객체
      */
     handleInputChange(e) {
-        const { name, value } = e.target;
-        const currentStep = this.config.currentStep || 1; 
-        this.config[`step${currentStep}`][name] = value; 
-        
+        const { name, value, type, checked } = e.target;
+        const currentStep = this.config.currentStep || 1;
+        if (!this.config[`step${currentStep}`]) {
+            this.config[`step${currentStep}`] = {};
+        }
+        // 체크박스인 경우 checked 값을 사용
+        if (type === 'checkbox') {
+            this.config[`step${currentStep}`][name] = checked;
+        }
+        else {
+            this.config[`step${currentStep}`][name] = value;
+        }
+
+        // 실시간 프리뷰 업데이트 콜백 호출
         this.updateCallback(); 
         
         // 💡 현재 단계 번호를 validateAndShowFeedback에 전달합니다.
