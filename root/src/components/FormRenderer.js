@@ -156,7 +156,6 @@ export class FormRenderer {
      */
     handleInputChange(e) {
         const { name, value } = e.target;
-        // 💡 현재 단계의 데이터에 접근하여 업데이트하도록 수정
         const currentStep = this.config.currentStep || 1; 
         this.config[`step${currentStep}`][name] = value; 
         

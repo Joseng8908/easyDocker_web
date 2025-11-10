@@ -71,6 +71,7 @@ function initializeApp() {
 
 function renderCurrentStep() {
     // FormRenderer 모듈을 통해 현재 단계의 폼 렌더링 요청
+    state.configData.currentStep = state.currentStep; // 현재 단계를 configData에 반영
     formRenderer.render(state.currentStep); 
     
     // 버튼 상태 업데이트 로직 (기존과 동일)
