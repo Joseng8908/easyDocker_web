@@ -80,7 +80,7 @@ function renderCurrentStep() {
 
     // '다음' 버튼 상태는 현재 단계의 유효성 검사 결과에 따라 결정
     if (state.currentStep < state.maxSteps) {
-        formRenderer.validateAndShowFeedback(state.configData[`step${state.currentStep}`]);
+        formRenderer.validateAndShowFeedback(state.configData[`step${state.currentStep}`], state.currentStep);
     } else {
         setNextButtonDisabledState(false); // 마지막 단계에서는 비활성화
     }
