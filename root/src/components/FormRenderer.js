@@ -1,6 +1,7 @@
 // ===========================================
 // src/components/FormRenderer.js
 // ===========================================
+import { validateStep1 } from '../utils/validator.js';
 
 export class FormRenderer {
     constructor(stepContainerId, configData, updateCallback) {
@@ -9,7 +10,8 @@ export class FormRenderer {
         // 앱의 전체 설정 상태 (main.js에서 공유)
         this.config = configData;
         this.updateCallback = updateCallback; // 프리뷰 업데이트 콜백 함수
-        
+        this.setNextButtonStateCallback = setBextButtonStateCallback;
+
         // Step 1 데이터의 기본값 설정 (초기화)
         if (!this.config.step1) {
             this.config.step1 = {
@@ -89,6 +91,9 @@ export class FormRenderer {
             // 'input' 이벤트는 키 입력 시마다 발생하여 실시간 업데이트에 유용
             element.addEventListener('input', (e) => this.handleInputChange(e));
         });
+
+        // 폼이 렌더링 된 후, 유효성 검사를 실행하여 초기 버튼 상태를 설정
+        this.validateAndShowFeedback(this.config.step1);
     }
 
     /**
@@ -104,6 +109,52 @@ export class FormRenderer {
         this.updateCallback(); 
         
         // TODO: 유효성 검사 로직은 다음 단계에서 추가합니다.
+        this.validateAndShowFeedback(this.config.step1);
     }
     
+    /**
+     * 유효성 검사를 실행하고, 에러 메시지를 표시하며, 버튼 상태를 업데이트합니다.
+     */
+    validateAndShowFeedback(data) {
+        const { isValid, errors } = validateStep1(data);
+
+        Object.keys(data).forEach(fieldName => {
+            const errorElement = document.getElementById(`error-${fieldName}`);
+            const inputElement = document.getElementById(fieldName);
+
+            if (errorElement && inputElement) {
+                if (errors[fieldName]) {
+                    // 에러가 있을 경우 에러 메시지를 표시
+                    errorElement.textContent = errors[fieldName];
+                    errorElement
+                    inputElement.classList.add('is-invalid');
+                    } else{
+                        // 에러가 없을 경우 에러 메시지 제거
+                        errorElement.textContent = '';
+                        errorElement.style.display = 'none';
+                        inputElement.classList.remove('is-invalid');
+                    }
+                }
+            });
+    // main.js의 콜백을 호출하여 '다음' 버튼 상태 업데이트
+    this.setNextButtonStateCallback(isValid);
+    return isValid;
+    }
+
+    /**
+     * 현재 단계에서 다음으로 넘어갈 수 있는지 최종적으로 확인합니다.
+     * main.js의 handleNextStep에서 호출됩니다.
+     */
+    validateForNextStep() {
+        if (this.config.currentStep === 1) {
+            return  this.validateAndShowFeedback(this.config.step1);
+        // else if (this.config.currentStep === 2) {
+        //     return this.validateAndShowFeedback(this.config.step2);
+        // } else if (this.config.currentStep === 3) {
+        //     return this.validateAndShowFeedback(this.config.step3);
+        // } else if (this.config.currentStep === 4) {
+        //     return this.validateAndShowFeedback(this.config.step4);
+        return true;
+        }
+    }
 }

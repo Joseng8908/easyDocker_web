@@ -39,13 +39,30 @@ function updateCodePreview() {
     // console.log(TemplateGenerator.generateMakefile(state.configData.step1.projectName));
 }
 
+function setNextButtonDisabledState(isValid) {
+    const nextButton = document.getElementById(NEXT_BUTTON_ID);
+    if (state.currentStep < state.maxSteps) {
+        nextButton.disabled = !isValid; //유효하지 않으면 disables를 true로 설정
+    } else {
+        nextButton.disabled = true; //마지막 단계에서는 항상 비활성화
+    }
+}
 function initializeApp() {
     console.log("앱 초기화 시작 - Vanilla JS Modules");
     
     // FormRenderer 인스턴스 생성 시, 프리뷰 업데이트 함수를 콜백으로 전달
-    formRenderer = new FormRenderer(STEP_CONTAINER_ID, state.configData, updateCodePreview); 
+    formRenderer = new FormRenderer(
+        STEP_CONTAINER_ID, 
+        state.configData, 
+        updateCodePreview,
+        setNextButtonDisabledState
+    ); 
     
-    // ... (기존 이벤트 리스너 등록 로직 유지) ...
+    const nextButton = document.getElementById(NEXT_BUTTON_ID);
+    const prevButton = document.getElementById(PREV_BUTTON_ID);
+
+    nextButton.addEventListener('click', handleNextStep);
+    prevButton.addEventListener('click', handlePrevStep);
 
     // 첫 단계 렌더링 및 초기 프리뷰 업데이트
     renderCurrentStep();
@@ -58,16 +75,23 @@ function renderCurrentStep() {
     
     // 버튼 상태 업데이트 로직 (기존과 동일)
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
-    const prevButton = document.getElementById(PREV_BUTTON_ID);
-
     prevButton.disabled = state.currentStep === 1;
-    // 다음 버튼 활성화 여부는 나중에 '유효성 검사' 결과에 따라 달라지도록 수정할 예정입니다.
-    nextButton.disabled = state.currentStep === state.maxSteps; 
+
+    // '다음' 버튼 상태는 현재 단계의 유효성 검사 결과에 따라 결정
+    if (state.currentStep < state.maxSteps) {
+        formRenderer.validateAndShowFeedback(state.configData[`step${state.currentStep}`]);
+    } else {
+        setNextButtonDisabledState(false); // 마지막 단계에서는 비활성화
+    }
+
+    
 }
 
 function handleNextStep() {
+    if (!formRenderer.validateForNextStep()) {
+        return; // 유효성 검사 실패 시 다음 단계로 진행하지 않음
+    }
     if (state.currentStep < state.maxSteps) {
-        // TODO: (중요) 다음 단계로 넘어가기 전, 현재 폼의 유효성 검사가 성공했는지 확인해야 함
         state.currentStep++;
         renderCurrentStep();
     }
