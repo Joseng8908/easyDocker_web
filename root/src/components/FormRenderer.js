@@ -78,7 +78,7 @@ export class FormRenderer {
         `;
 
         this.container.innerHTML = html;
-        this.attachEventListeners(); // 이벤트 리스너 부착
+        this.attachEventListeners(1); // 이벤트 리스너 부착
     }
     
     // ===========================================
@@ -159,7 +159,8 @@ export class FormRenderer {
      * @param {Object} data - 현재 단계의 설정 데이터
      * @param {number} step - 현재 단계 번호 (💡 필수 인수)
      */
-    validateAndShowFeedback(data) {
+    validateAndShowFeedback(data, step) {
+        const currentData = data || {};
         let validationResult;
 
         if(step === 1) {
