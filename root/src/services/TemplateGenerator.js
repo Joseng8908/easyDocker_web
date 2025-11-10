@@ -58,7 +58,7 @@ export class TemplateGenerator {
 FROM ${baseImage}
 
 # 작업 디렉토리 설정
-WORKDIR ${workDir}
+WORKDIR ${finalWorkDir}
 
 # ----------------------------------------------------
 # Step 2: 코드 복사 및 의존성 설치
@@ -68,7 +68,7 @@ COPY package*.json ./
 # 또는 Python의 경우: COPY requirements.txt ./
 
 # 의존성 설치 명령
-RUN ${installCommand}
+RUN ${finalInstallCommand}
 
 # 전체 프로젝트 파일 복사
 COPY . .

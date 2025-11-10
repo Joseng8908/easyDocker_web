@@ -24,7 +24,7 @@ export class FormRenderer {
         // ✅ 수정: Step 2 데이터 기본값 설정 (초기화)
         if (!this.config.step2) {
             this.config.step2 = {
-                workDir: '/app', // 이 값이 undefined이어서 오류가 났습니다.
+                workDir: '/app', 
                 installCommandOverride: '', 
                 copyPath: '.',
                 runUser: '',
