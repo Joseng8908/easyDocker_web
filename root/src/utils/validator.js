@@ -33,7 +33,7 @@ export function validateStep1(step1Data) {
         isValid = false;
     } else if (isNaN(portNum) || portNum < 1 || portNum > 65535 || !Number.isInteger(portNum)){
         errors.port = '유효한 포트 번호(1 ~ 65535)를 입력해주세요.';
-        isvalid = false;
+        isValid = false;
     }
 
 
