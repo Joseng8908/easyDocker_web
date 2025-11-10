@@ -81,17 +81,60 @@ export class FormRenderer {
         this.attachEventListeners(); // 이벤트 리스너 부착
     }
     
+    // ===========================================
+    // Step 2: Dockerfile 세부 설정 폼 (💡 새로 추가)
+    // ===========================================
+    renderStep2() {
+        const html = `
+            <h3>Step 2. Dockerfile 세부 설정</h3>
+            <div class="form-group">
+                <label for="workDir">📁 작업 디렉토리 (WORKDIR):</label>
+                <input type="text" id="workDir" name="workDir" 
+                       value="${this.config.step2.workDir}" placeholder="/app">
+                <small class="error-message" id="error-workDir"></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="copyPath">📄 프로젝트 복사 경로 (COPY . [경로]):</label>
+                <input type="text" id="copyPath" name="copyPath" 
+                       value="${this.config.step2.copyPath}" placeholder=".">
+                <small class="error-message" id="error-copyPath"></small>
+            </div>
+
+            <div class="form-group">
+                <label for="installCommandOverride">⚙️ 설치 명령어 오버라이드 (RUN):</label>
+                <input type="text" id="installCommandOverride" name="installCommandOverride" 
+                       value="${this.config.step2.installCommandOverride}" 
+                       placeholder="예: npm install --production">
+                <small class="error-message" id="error-installCommandOverride"></small>
+            </div>
+
+            <div class="form-group">
+                <label for="runUser">👤 사용자 설정 (USER):</label>
+                <input type="text" id="runUser" name="runUser" 
+                       value="${this.config.step2.runUser}" 
+                       placeholder="예: node (루트 권한 사용 방지)">
+                <small class="error-message" id="error-runUser"></small>
+            </div>
+        `;
+        
+        this.container.innerHTML = html;
+        // 💡 Step 2 렌더링 후 이벤트 리스너 부착 및 유효성 검사 호출
+        this.attachEventListeners(2); 
+    }
     /**
      * 폼 필드에 입력이 발생했을 때 설정 상태를 업데이트하는 리스너를 부착합니다.
      */
-    attachEventListeners() {
+    // 💡 Step에 따라 이벤트 리스너를 다르게 처리할 수 있도록 인수를 추가했습니다.
+    attachEventListeners(step = 1) {
         this.container.querySelectorAll('input, select').forEach(element => {
-            // 'input' 이벤트는 키 입력 시마다 발생하여 실시간 업데이트에 유용
             element.addEventListener('input', (e) => this.handleInputChange(e));
         });
 
-        // 폼이 렌더링 된 후, 유효성 검사를 실행하여 초기 버튼 상태를 설정
-        this.validateAndShowFeedback(this.config.step1);
+        // 폼이 렌더링 된 후, 초기 버튼 상태를 설정하기 위해 유효성 검사 호출
+        const dataKey = `step${step}`;
+        // 💡 Step 2의 데이터를 안전하게 전달합니다.
+        this.validateAndShowFeedback(this.config[dataKey] || {}, step);
     }
 
     /**
@@ -101,17 +144,20 @@ export class FormRenderer {
      */
     handleInputChange(e) {
         const { name, value } = e.target;
-        this.config.step1[name] = value; 
+        // 💡 현재 단계의 데이터에 접근하여 업데이트하도록 수정
+        const currentStep = this.config.currentStep || 1; 
+        this.config[`step${currentStep}`][name] = value; 
         
-        // **⭐ 핵심:** 설정이 업데이트될 때마다 프리뷰 업데이트 함수 호출
         this.updateCallback(); 
         
-        // TODO: 유효성 검사 로직은 다음 단계에서 추가합니다.
-        this.validateAndShowFeedback(this.config.step1);
+        // 💡 현재 단계 번호를 validateAndShowFeedback에 전달합니다.
+        this.validateAndShowFeedback(this.config[`step${currentStep}`], currentStep);
     }
     
     /**
      * 유효성 검사를 실행하고, 에러 메시지를 표시하며, 버튼 상태를 업데이트합니다.
+     * @param {Object} data - 현재 단계의 설정 데이터
+     * @param {number} step - 현재 단계 번호 (💡 필수 인수)
      */
     validateAndShowFeedback(data) {
         let validationResult;
@@ -124,7 +170,7 @@ export class FormRenderer {
             validationResult = { isValid: true, errors: {} }
         }
 
-        const { isValid, errors } = validateStep1(data);
+        const { isValid, errors } = validationResult;
 
         Object.keys(data).forEach(fieldName => {
             const errorElement = document.getElementById(`error-${fieldName}`);
@@ -154,15 +200,16 @@ export class FormRenderer {
      * main.js의 handleNextStep에서 호출됩니다.
      */
     validateForNextStep() {
-        if (this.config.currentStep === 1) {
-            return  this.validateAndShowFeedback(this.config.step1);
-        }
-        else if (this.config.currentStep === 2) {
-            return this.validateAndShowFeedback(this.config.step2);
+        // 💡 this.config.currentStep을 사용하려면 main.js에서 currentStep을 설정해야 합니다.
+        const currentStep = this.config.currentStep || 1; 
+
+        if (currentStep === 1) {
+            return this.validateAndShowFeedback(this.config.step1, 1);
+        } else if (currentStep === 2) {
+            return this.validateAndShowFeedback(this.config.step2, 2);
         } else {
-            return true;
+            return true; // Step 3, 4 등은 기본적으로 통과
         }
-        return true; // 기본값으로 true 반환       
     }
 
 }
