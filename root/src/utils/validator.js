@@ -11,7 +11,7 @@ export function validateStep1(step1Data) {
     if(!step1Data.projectName || step1Data.projectName === '') {
         errors.projectName = '프로그램 이름을 입력해주세요.';
         isValid = false;
-    } else if (!/^[a-z0-9-]+$/.test(step1Data.prorjectName)){
+    } else if (!/^[a-z0-9-]+$/.test(step1Data.projectName)){
         // 소문자, 숫자, 하이픈만 허용되는 검사
         errors.projectName = '프로젝트 이름은 소문자, 숫자, 하이픈만 사용이 가능합니다.';
         isValid = false;
