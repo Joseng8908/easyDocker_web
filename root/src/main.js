@@ -47,6 +47,7 @@ function setNextButtonDisabledState(isValid) {
         nextButton.disabled = true; //마지막 단계에서는 항상 비활성화
     }
 }
+
 function initializeApp() {
     console.log("앱 초기화 시작 - Vanilla JS Modules");
     

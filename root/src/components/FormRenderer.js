@@ -41,7 +41,7 @@ export class FormRenderer {
         
         if (step === 1) { this.renderStep1();} 
         else if (step === 2) { this.renderStep2(); }
-        // else if (step === 3) { this.renderStep3(); } // 추후 확장
+        else if (step === 3) { this.renderStep3(); }
         // else if (step === 4) { this.renderStep4(); } // 추후 확장
     }
 
@@ -134,6 +134,52 @@ export class FormRenderer {
         // 💡 Step 2 렌더링 후 이벤트 리스너 부착 및 유효성 검사 호출
         this.attachEventListeners(2); 
     }
+    // ===========================================
+    // Step 3: Makefile 설정 폼 
+    // ===========================================
+    renderStep3() {
+        //디버그용 콘솔 출력
+        console.log("Rendering Step 3 Form");
+        if (!this.config.step3) {
+            this.config.step3 = {
+                buildArgs: '',
+                runPortMap: '8080:8080',
+                runVolume: '',
+            };
+        }
+        const html = `
+            <h3>Step 3. Makefile 및 실행 옵션</h3>
+            <p>Makefile의 Docker 빌드/실행 명령에 추가될 옵션을 설정합니다.</p>
+            
+            <div class="form-group">
+                <label for="buildArgs">🏗️ 빌드 인자 (Build Arguments):</label>
+                <input type="text" id="buildArgs" name="buildArgs" 
+                        value="${this.config.step3.buildArgs || ''}" 
+                        placeholder="예: --no-cache, --pull">
+                <small class="error-message" id="error-buildArgs"></small>
+            </div>
+            
+            <div class="form-group">
+                <label for="runPortMap">🔗 실행 포트 매핑 (Run Port Map - H:C):</label>
+                <input type="text" id="runPortMap" name="runPortMap" 
+                        value="${this.config.step3.runPortMap || ''}" 
+                        placeholder="예: 8080:3000 (호스트:컨테이너)">
+                <small class="error-message" id="error-runPortMap"></small>
+            </div>
+
+            <div class="form-group">
+                <label for="runVolume">📂 볼륨 마운트 (Volume Mount - H:C):</label>
+                <input type="text" id="runVolume" name="runVolume" 
+                        value="${this.config.step3.runVolume || ''}" 
+                        placeholder="예: $(shell pwd)/data:/app/data">
+                <small class="error-message" id="error-runVolume"></small>
+            </div>
+        `;
+
+        this.container.innerHTML = html;
+        this.attachEventListeners(3); // 이벤트 리스너 부착
+    }
+    
     /**
      * 폼 필드에 입력이 발생했을 때 설정 상태를 업데이트하는 리스너를 부착합니다.
      */
@@ -145,7 +191,6 @@ export class FormRenderer {
 
         // 폼이 렌더링 된 후, 초기 버튼 상태를 설정하기 위해 유효성 검사 호출
         const dataKey = `step${step}`;
-        // 💡 Step 2의 데이터를 안전하게 전달합니다.
         this.validateAndShowFeedback(this.config[dataKey] || {}, step);
     }
 
