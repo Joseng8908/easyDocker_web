@@ -1,7 +1,7 @@
 // ===========================================
 // src/components/FormRenderer.js
 // ===========================================
-import { validateStep1, validateStep2 } from '../utils/validator.js';
+import { validateStep1, validateStep2, validateStep3 } from '../utils/validator.js';
 
 export class FormRenderer {
     constructor(stepContainerId, configData, updateCallback, setNextButtonStateCallback) {
@@ -233,6 +233,8 @@ export class FormRenderer {
             validationResult = validateStep1(data);
         } else if(step === 2) {
             validationResult = validateStep2(data);
+        } else if(step === 3) {
+            validationResult = validateStep3(data);
         } else {
             validationResult = { isValid: true, errors: {} }
         }
@@ -274,6 +276,8 @@ export class FormRenderer {
             return this.validateAndShowFeedback(this.config.step1, 1);
         } else if (currentStep === 2) {
             return this.validateAndShowFeedback(this.config.step2, 2);
+        } else if (currentStep === 3) {
+            return this.validateAndShowFeedback(this.config.step3, 3);
         } else {
             return true; // Step 3, 4 등은 기본적으로 통과
         }
