@@ -214,7 +214,7 @@ export class FormRenderer {
         }
 
         // 실시간 프리뷰 업데이트 콜백 호출
-        this.updateCallback(); 
+        this.updateCallback(this.config); 
         
         // 💡 현재 단계 번호를 validateAndShowFeedback에 전달합니다.
         this.validateAndShowFeedback(this.config[`step${currentStep}`], currentStep);
