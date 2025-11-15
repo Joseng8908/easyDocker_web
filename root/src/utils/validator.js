@@ -65,8 +65,10 @@ export function validateStep2(step2Data) {
  */
 export function validateStep3(step3Data) {
     const errors = {};
-    let isValid = true;
-
-    // 현재 Step 3에는 필수 필드가 없으므로 항상 유효함을 반환
+    const isValid = true;
+    
+    // 포트 매핑 (runPortMap)에 대한 간단한 형식을 추가 검사할 수 있습니다.
+    // 예: '8080:3000' 형태인지 확인하는 로직 등
+    
     return { isValid, errors };
 }

@@ -25,18 +25,34 @@ let formRenderer;
 /**
  * 현재 configData를 기반으로 코드를 생성하고 프리뷰 영역을 업데이트합니다.
  */
-function updateCodePreview() {
-    // 1. TemplateGenerator를 사용하여 Dockerfile 코드 생성
-    const dockerfileCode = TemplateGenerator.generateDockerfile(state.configData);
+function updateCodePreview(configData) {
+    const generator = new TemplateGenerator();
+    let dockerfileContent = '';
+    let makefileContent = ''; // 💡 Makefile 변수 추가
+
+    // Step 1과 2가 완료되었을 때 Dockerfile 생성 가능
+    if (configData.step1 && configData.step2) {
+        dockerfileContent = generator.generateDockerfile(configData);
+    }
     
-    // 2. DOM에 결과 출력
-    const codeElement = document.getElementById(DOCKERFILE_PREVIEW_ID);
-    
-    // 템플릿 리터럴로 생성된 코드는 줄바꿈/공백이 포함되므로, 이를 그대로 출력
-    codeElement.textContent = dockerfileCode; 
-    
-    // (선택 사항: Syntax Highlighting 라이브러리 사용 시, 여기서 활성화)
-    // console.log(TemplateGenerator.generateMakefile(state.configData.step1.projectName));
+    // Step 3이 완료되었을 때 Makefile 생성 가능 (Step 1, 2가 필수)
+    if (configData.step1 && configData.step2 && configData.step3) { // 💡 Step 3 조건 추가
+        makefileContent = generator.generateMakefile(configData); // 💡 Makefile 생성
+    }
+
+    // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
+    const dockerfileElement = document.getElementById('dockerfile-preview');
+    if (dockerfileElement) {
+        dockerfileElement.textContent = dockerfileContent || 'Dockerfile 코드가 여기에 표시됩니다.';
+    }
+
+    // 💡 Makefile 프리뷰 업데이트
+    const makefileElement = document.getElementById('makefile-preview');
+    if (makefileElement) {
+        makefileElement.textContent = makefileContent || 'Makefile 코드가 여기에 표시됩니다.';
+    }
+
+    // ... (이후의 기타 업데이트 로직)
 }
 
 function setNextButtonDisabledState(isValid) {

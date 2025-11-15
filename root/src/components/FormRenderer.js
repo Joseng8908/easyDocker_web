@@ -279,7 +279,7 @@ export class FormRenderer {
         } else if (currentStep === 3) {
             return this.validateAndShowFeedback(this.config.step3, 3);
         } else {
-            return true; // Step 3, 4 등은 기본적으로 통과
+            return true; // Step4 기본적으로 통과
         }
     }
 
