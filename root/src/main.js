@@ -26,6 +26,8 @@ let formRenderer;
  * 현재 configData를 기반으로 코드를 생성하고 프리뷰 영역을 업데이트합니다.
  */
 function updateCodePreview(configData) {
+    const safeConfig = configData || {};
+    
     const generator = new TemplateGenerator();
     let dockerfileContent = '';
     let makefileContent = ''; // 💡 Makefile 변수 추가
