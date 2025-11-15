@@ -42,6 +42,15 @@ function updateCodePreview(configData) {
         makefileContent = generator.generateMakefile(safeConfig);
     }
 
+    // 💡 디버깅 1: 생성된 콘텐츠 확인
+    console.log("--- Code Preview Update ---");
+    console.log("safeConfig:", safeConfig);
+    console.log("Dockerfile Content Length:", dockerfileContent.length);
+    console.log("Makefile Content Length:", makefileContent.length);
+    console.log("---------------------------");
+
+    // 💡 디버깅 2: DOM 요소가 존재하는지 확인
+    console.log("Dockerfile Element Found:", !!dockerfileElement);
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
     const dockerfileElement = document.getElementById('dockerfile-preview');
     if (dockerfileElement) {
