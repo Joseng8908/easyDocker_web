@@ -12,7 +12,7 @@ export class Downloader {
     saveFile(filename, content) {
         // 1. Blob 객체 생성
         // 'text/plain' MIME 타입으로 인코딩된 파일 내용을 담습니다.
-        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const blob = new Blob([content], { type: 'application/octet-stream' });
         
         // 2. Blob URL 생성
         const url = URL.createObjectURL(blob);
