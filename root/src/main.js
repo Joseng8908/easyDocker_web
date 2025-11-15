@@ -85,7 +85,7 @@ function initializeApp() {
 
     // 첫 단계 렌더링 및 초기 프리뷰 업데이트
     renderCurrentStep();
-    updateCodePreview(); // 앱 시작 시 초기값으로 한 번 실행
+    updateCodePreview(state.configData);
 }
 
 function renderCurrentStep() {
