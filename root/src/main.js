@@ -3,7 +3,8 @@
 // ===========================================
 import { FormRenderer } from './components/FormRenderer.js'; // 모듈 import
 import { TemplateGenerator } from './services/TemplateGenerator.js'; // 모듈 import
-// 필요한 DOM 요소 ID (기존과 동일)
+import { Downloader } from './services/Downloader.js';
+// ===========================================
 const DOCKERFILE_PREVIEW_ID = 'dockerfile-code';
 const STEP_CONTAINER_ID = 'step-container';
 const NEXT_BUTTON_ID = 'next-step';
@@ -18,6 +19,8 @@ const state = {
 
 // 모듈 인스턴스 변수
 let formRenderer; 
+let finalDockerfileContent = '';
+let finalMakefileContent = '';
 
 // ===========================================
 // 초기화 함수 및 이벤트 리스너 설정
@@ -27,8 +30,8 @@ let formRenderer;
  */
 function updateCodePreview(configData) {
     const safeConfig = configData || {};
-
     const generator = new TemplateGenerator();
+
     let dockerfileContent = '';
     let makefileContent = ''; // 💡 Makefile 변수 추가
 
@@ -42,15 +45,10 @@ function updateCodePreview(configData) {
         makefileContent = generator.generateMakefile(safeConfig);
     }
 
-    // 💡 디버깅 1: 생성된 콘텐츠 확인
-    console.log("--- Code Preview Update ---");
-    console.log("safeConfig:", safeConfig);
-    console.log("Dockerfile Content Length:", dockerfileContent.length);
-    console.log("Makefile Content Length:", makefileContent.length);
-    console.log("---------------------------");
-
-    // 💡 디버깅 2: DOM 요소가 존재하는지 확인
-    console.log("Dockerfile Element Found:", !!dockerfileElement);
+    finalDockerfileContent = dockerfileContent;
+    finalMakefileContent = makefileContent;
+    
+    
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
     const dockerfileElement = document.getElementById('dockerfile-preview');
     if (dockerfileElement) {
@@ -64,6 +62,22 @@ function updateCodePreview(configData) {
     }
 
     // ... (이후의 기타 업데이트 로직)
+}
+
+/**
+ * Step 4에서 다운로드 버튼 클릭을 처리합니다.
+ * @param {string} type - 다운로드할 파일 종류 ('dockerfile' 또는 'makefile')
+ */
+function handleDownload(type) {
+    const downloader = new Downloader();
+    
+    if (type === 'dockerfile' && finalDockerfileContent) {
+        downloader.saveFile('Dockerfile', finalDockerfileContent);
+    } else if (type === 'makefile' && finalMakefileContent) {
+        downloader.saveFile('Makefile', finalMakefileContent);
+    } else {
+        alert('아직 코드가 생성되지 않았거나 비어 있습니다. 이전 단계를 확인해 주세요.');
+    }
 }
 
 function setNextButtonDisabledState(isValid) {
@@ -111,6 +125,21 @@ function renderCurrentStep() {
         formRenderer.validateAndShowFeedback(state.configData[`step${state.currentStep}`], state.currentStep);
     } else {
         setNextButtonDisabledState(false); // 마지막 단계에서는 비활성화
+    }
+
+    if (state.currentStep === state.maxSteps) { // state.maxSteps = 4
+        const downloadDockerfileBtn = document.getElementById('download-dockerfile');
+        const downloadMakefileBtn = document.getElementById('download-makefile');
+
+        if (downloadDockerfileBtn) {
+            downloadDockerfileBtn.addEventListener('click', () => handleDownload('dockerfile'));
+        }
+        if (downloadMakefileBtn) {
+            downloadMakefileBtn.addEventListener('click', () => handleDownload('makefile'));
+        }
+        
+        // Step 4에서는 '다음' 버튼은 항상 비활성화 상태로 유지
+        setNextButtonDisabledState(false); 
     }
 
     

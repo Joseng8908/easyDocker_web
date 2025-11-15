@@ -42,7 +42,7 @@ export class FormRenderer {
         if (step === 1) { this.renderStep1();} 
         else if (step === 2) { this.renderStep2(); }
         else if (step === 3) { this.renderStep3(); }
-        // else if (step === 4) { this.renderStep4(); } // 추후 확장
+        else if (step === 4) { this.renderStep4(); } 
     }
 
     // ===========================================
@@ -178,6 +178,30 @@ export class FormRenderer {
 
         this.container.innerHTML = html;
         this.attachEventListeners(3); // 이벤트 리스너 부착
+    }
+    // ===========================================
+    // Step 4: 최종 검토 및 다운로드 폼
+    // ===========================================
+    renderStep4() {
+        console.log("Rendering Step 4 Form");
+        
+        const html = `
+            <h3>Step 4. 최종 파일 다운로드</h3>
+            <p>생성된 **Dockerfile**과 **Makefile**을 최종 검토하고 다운로드하세요. 이 파일들은 현재 프리뷰 패널에 표시되어 있습니다.</p>
+
+            <div class="result-actions-final">
+                <button id="download-dockerfile" class="btn-primary">📄 Dockerfile 다운로드</button>
+                <button id="download-makefile" class="btn-primary">⚙️ Makefile 다운로드</button>
+                </div>
+
+            <div class="note-box">
+                <p>파일을 다운로드하기 전에 반드시 **오른쪽 미리보기**를 통해 내용을 최종 확인해 주세요.</p>
+            </div>
+        `;
+
+        this.container.innerHTML = html;
+        // Step 4에서는 폼 필드가 없으므로, 이벤트 리스너 부착 대신 다운로드 핸들러만 준비합니다.
+        // 버튼 클릭 이벤트는 main.js에서 처리합니다.
     }
     
     /**
