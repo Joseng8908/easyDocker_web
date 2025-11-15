@@ -8,7 +8,7 @@ export class TemplateGenerator {
      * @param {Object} configData - 앱의 전체 설정 데이터 (state.configData)
      * @returns {string} - 생성된 Dockerfile 내용
      */
-    static generateDockerfile(configData) {
+    generateDockerfile(configData) {
         const step1 = configData.step1 || {}; // Step 1 데이터 가져오기
         const step2 = configData.step2 || {}; // Step 2 데이터 가져오기 (추후 사용 가능)
         // const step3 = configData.step3 || {}; // Step 3 데이터 가져오기 (추후 사용 가능)
