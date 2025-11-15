@@ -27,19 +27,19 @@ let formRenderer;
  */
 function updateCodePreview(configData) {
     const safeConfig = configData || {};
-    
+
     const generator = new TemplateGenerator();
     let dockerfileContent = '';
     let makefileContent = ''; // 💡 Makefile 변수 추가
 
     // Step 1과 2가 완료되었을 때 Dockerfile 생성 가능
-    if (configData.step1 && configData.step2) {
-        dockerfileContent = generator.generateDockerfile(configData);
+    if (safeConfig.step1 && safeConfig.step2) { 
+        dockerfileContent = generator.generateDockerfile(safeConfig);
     }
     
     // Step 3이 완료되었을 때 Makefile 생성 가능 (Step 1, 2가 필수)
-    if (configData.step1 && configData.step2 && configData.step3) { // 💡 Step 3 조건 추가
-        makefileContent = generator.generateMakefile(configData); // 💡 Makefile 생성
+    if (safeConfig.step1 && safeConfig.step2 && safeConfig.step3) {
+        makefileContent = generator.generateMakefile(safeConfig);
     }
 
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
