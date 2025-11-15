@@ -9,7 +9,6 @@ export class FormRenderer {
         this.container = document.getElementById(stepContainerId);
         // 앱의 전체 설정 상태 (main.js에서 공유)
         this.config = configData;
-        this.updateCallback = updateCallback; // 프리뷰 업데이트 콜백 함수
         this.setNextButtonStateCallback = setNextButtonStateCallback;
 
         // Step 1 데이터의 기본값 설정 (초기화)
