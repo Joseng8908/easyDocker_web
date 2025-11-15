@@ -10,7 +10,7 @@ export class FormRenderer {
         // 앱의 전체 설정 상태 (main.js에서 공유)
         this.config = configData;
         this.setNextButtonStateCallback = setNextButtonStateCallback;
-
+        this.updateCallback = updateCallback;
         // Step 1 데이터의 기본값 설정 (초기화)
         if (!this.config.step1) {
             this.config.step1 = {
