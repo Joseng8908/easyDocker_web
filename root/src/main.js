@@ -4,6 +4,7 @@
 import { FormRenderer } from './components/FormRenderer.js'; // 모듈 import
 import { TemplateGenerator } from './services/TemplateGenerator.js'; // 모듈 import
 import { Downloader } from './services/Downloader.js';
+import { StorageManager } from './services/StorageManager.js';
 // ===========================================
 const DOCKERFILE_PREVIEW_ID = 'dockerfile-code';
 const STEP_CONTAINER_ID = 'step-container';
@@ -21,6 +22,8 @@ const state = {
 let formRenderer; 
 let finalDockerfileContent = '';
 let finalMakefileContent = '';
+let storageManager = new StorageManager();
+
 
 // ===========================================
 // 초기화 함수 및 이벤트 리스너 설정
@@ -48,6 +51,7 @@ function updateCodePreview(configData) {
     finalDockerfileContent = dockerfileContent;
     finalMakefileContent = makefileContent;
     
+    storageManaager.saveState(state.configData); // 상태 저장
     
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
     const dockerfileElement = document.getElementById('dockerfile-preview');
@@ -92,6 +96,17 @@ function setNextButtonDisabledState(isValid) {
 function initializeApp() {
     console.log("앱 초기화 시작 - Vanilla JS Modules");
     
+    // storage 초기화
+    storageManager = new StorageManager();
+
+    // 이전에 저장된 상태 불러오기
+    const savedConfig = storageManager.loadState();
+    if (savedConfig) {
+        state.configData = savedConfig;
+        console.log("이전 상태 불러오기 완료:", savedConfig);
+    } else {
+        console.log("저장된 상태가 없습니다. 초기 상태로 시작합니다.");
+    }
     // FormRenderer 인스턴스 생성 시, 프리뷰 업데이트 함수를 콜백으로 전달
     formRenderer = new FormRenderer(
         STEP_CONTAINER_ID, 
