@@ -51,7 +51,7 @@ function updateCodePreview(configData) {
     finalDockerfileContent = dockerfileContent;
     finalMakefileContent = makefileContent;
     
-    storageManaager.saveState(state.configData); // 상태 저장
+    storageManager.saveState(state.configData); // 상태 저장
     
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
     const dockerfileElement = document.getElementById('dockerfile-preview');
