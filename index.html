@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dockerfile Generator</title>
     <link rel="stylesheet" href="./root/assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
 </head>
 <body>
     <header>
@@ -27,13 +28,14 @@
         <section class="preview-panel">
             <h2>코드 미리보기</h2>
             <div id="code-preview">
-                <pre><code id="dockerfile-preview">// Dockerfile 코드가 실시간으로 여기에 표시됩니다.</code></pre>
-                
-                <pre><code id = "makefile-preview">// Makefile 코드가 여기에 표시됩니다.</code></pre>
+                <pre><code id="dockerfile-preview" class="language-dockerfile">Dockerfile 코드가 여기에 표시됩니다.</code></pre>
+
+                <pre><code id="makefile-preview" class="language-makefile">Makefile 코드가 여기에 표시됩니다.</code></pre>
             </div>
         </section>
     </main>
     
     <script type="module" src="./root/src/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </body>
 </html>
