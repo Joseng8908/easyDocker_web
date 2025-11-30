@@ -72,7 +72,13 @@ function updateCodePreview(configData) {
 
     // 코드 하이라이팅 적용
     if (window.hljs) {
-        hljs.highlightAll(); 
+        // 💡 수정: highlightAll() 대신 개별 요소를 대상으로 명시적 호출
+        if (dockerfileElement) {
+            hljs.highlightElement(dockerfileElement); // 이 요소만 정확히 재하이라이팅
+        }
+        if (makefileElement) {
+            hljs.highlightElement(makefileElement); // 이 요소만 정확히 재하이라이팅
+        }
     }
 }
 
