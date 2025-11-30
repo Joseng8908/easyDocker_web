@@ -98,7 +98,9 @@ function setNextButtonDisabledState(isValid) {
 
 function initializeApp() {
     console.log("앱 초기화 시작 - Vanilla JS Modules");
-    
+    // 다크 모드 설정 로드
+    loadTheme();
+
     // storage 초기화
     storageManager = new StorageManager();
 
@@ -121,6 +123,11 @@ function initializeApp() {
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
     const prevButton = document.getElementById(PREV_BUTTON_ID);
 
+    const themeToggleButton = document.getElementById('theme-toggle-btn');
+    if (themeToggleButton) {
+        themeToggleButton.addEventListener('click', toggleDarkMode);
+    }
+    
     nextButton.addEventListener('click', handleNextStep);
     prevButton.addEventListener('click', handlePrevStep);
 
@@ -181,6 +188,30 @@ function handlePrevStep() {
     }
 }
 
+/**
+ * 다크/라이트 모드를 토글하고 상태를 localStorage에 저장합니다.
+ */
+function toggleDarkMode() {
+    // <body> 태그에 dark-mode 클래스를 토글 (붙었다/떨어졌다)
+    const isDarkMode = document.body.classList.toggle('dark-mode');
+    
+    // localStorage에 현재 테마 상태 저장
+    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+}
+
+/**
+ * 로컬 스토리지에 저장된 테마를 로드하여 적용합니다.
+ */
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // 1. 저장된 설정이 있거나, 시스템 설정이 다크 모드일 경우
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark-mode');
+    }
+    // 2. 저장된 설정이 'light'이면 기본 상태를 유지
+}
 
 // 앱 시작
 initializeApp();
