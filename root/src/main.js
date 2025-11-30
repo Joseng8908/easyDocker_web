@@ -62,12 +62,16 @@ function updateCodePreview(configData) {
     const dockerfileElement = document.getElementById('dockerfile-preview');
     if (dockerfileElement) {
         dockerfileElement.textContent = dockerfileContent || 'Dockerfile 코드가 여기에 표시됩니다.';
+    
+        delete dockerfileElement.dataset.highlighted;
     }
 
     // 💡 Makefile 프리뷰 업데이트
     const makefileElement = document.getElementById('makefile-preview');
     if (makefileElement) {
         makefileElement.textContent = makefileContent || 'Makefile 코드가 여기에 표시됩니다.';
+    
+        delete dockerfileElement.dataset.highlighted;
     }
 
     // 코드 하이라이팅 적용
