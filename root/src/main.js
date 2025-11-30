@@ -65,7 +65,10 @@ function updateCodePreview(configData) {
         makefileElement.textContent = makefileContent || 'Makefile 코드가 여기에 표시됩니다.';
     }
 
-    // ... (이후의 기타 업데이트 로직)
+    // 코드 하이라이팅 적용
+    if (window.hljs) {
+        hljs.highlightAll(); 
+    }
 }
 
 /**
