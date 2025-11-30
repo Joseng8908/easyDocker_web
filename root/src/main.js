@@ -11,6 +11,11 @@ const STEP_CONTAINER_ID = 'step-container';
 const NEXT_BUTTON_ID = 'next-step';
 const PREV_BUTTON_ID = 'prev-step';
 
+// 하이라이트.js 테마 URL 및 링크 ID
+const HLJS_THEME_DARK = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+const HLJS_THEME_LIGHT = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css';
+const HLJS_THEME_LINK_ID = 'hljs-theme-link';
+
 // 앱의 상태를 저장할 객체
 const state = {
     currentStep: 1,
@@ -127,7 +132,7 @@ function initializeApp() {
     if (themeToggleButton) {
         themeToggleButton.addEventListener('click', toggleDarkMode);
     }
-    
+
     nextButton.addEventListener('click', handleNextStep);
     prevButton.addEventListener('click', handlePrevStep);
 
@@ -192,10 +197,21 @@ function handlePrevStep() {
  * 다크/라이트 모드를 토글하고 상태를 localStorage에 저장합니다.
  */
 function toggleDarkMode() {
-    // <body> 태그에 dark-mode 클래스를 토글 (붙었다/떨어졌다)
     const isDarkMode = document.body.classList.toggle('dark-mode');
+    const themeLink = document.getElementById(HLJS_THEME_LINK_ID);
     
-    // localStorage에 현재 테마 상태 저장
+    // 💡 Highlight.js 테마 CSS 파일 경로 전환
+    if (themeLink) {
+        if (isDarkMode) {
+            // 다크 모드가 활성화되면, 다크 테마 CSS 로드
+            themeLink.href = HLJS_THEME_DARK;
+        } else {
+            // 라이트 모드가 활성화되면, 라이트 테마 CSS 로드
+            themeLink.href = HLJS_THEME_LIGHT;
+        }
+    }
+
+    // localStorage를 사용하여 상태 저장
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 }
 
@@ -205,12 +221,16 @@ function toggleDarkMode() {
 function loadTheme() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const themeLink = document.getElementById(HLJS_THEME_LINK_ID);
     
-    // 1. 저장된 설정이 있거나, 시스템 설정이 다크 모드일 경우
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
         document.body.classList.add('dark-mode');
+        // 💡 초기 로드 시 다크 테마 적용
+        if (themeLink) themeLink.href = HLJS_THEME_DARK; 
+    } else {
+        // 💡 초기 로드 시 라이트 테마 적용
+        if (themeLink) themeLink.href = HLJS_THEME_LIGHT;
     }
-    // 2. 저장된 설정이 'light'이면 기본 상태를 유지
 }
 
 // 앱 시작
