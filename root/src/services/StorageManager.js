@@ -10,7 +10,7 @@ export class StorageManager {
     
     // 프로젝트 목록을 저장하는 고정 키
     static PROJECT_LIST_KEY = 'docker_configs_list';
-    
+    static PROJECT_DATA_PREFIX = 'project_data_';
     /**
      * @description 프로젝트 목록(ID와 이름)을 localStorage에 저장합니다.
      * @param {Array<Object>} projectList - [{ id: string, name: string, timestamp: number }]
@@ -49,8 +49,9 @@ export class StorageManager {
         if (!projectId) return;
         try {
             const data = JSON.stringify(configData);
-            // 프로젝트 ID를 키로 사용하여 상세 설정 저장
-            localStorage.setItem(projectId, data); 
+            // 💡 수정: 고유 접두사를 키 앞에 붙여서 충돌 방지
+            const key = StorageManager.PROJECT_DATA_PREFIX + projectId; 
+            localStorage.setItem(key, data); 
         } catch (error) {
             console.error(`Error saving project ${projectId}:`, error);
         }
@@ -64,7 +65,9 @@ export class StorageManager {
     loadProject(projectId) {
         if (!projectId) return null;
         try {
-            const data = localStorage.getItem(projectId);
+            // 💡 수정: 로드할 때도 동일한 접두사를 사용하여 키를 찾습니다.
+            const key = StorageManager.PROJECT_DATA_PREFIX + projectId;
+            const data = localStorage.getItem(key);
             return data ? JSON.parse(data) : null;
         } catch (error) {
             console.error(`Error loading project ${projectId}:`, error);
@@ -80,10 +83,11 @@ export class StorageManager {
         if (!projectId) return;
 
         try {
-            // 1. 프로젝트 상세 데이터 삭제
-            localStorage.removeItem(projectId);
-
-            // 2. 프로젝트 목록에서 ID 제거 후 목록 업데이트
+            // 💡 수정: 삭제할 때도 동일한 접두사를 사용하여 키를 지정합니다.
+            const key = StorageManager.PROJECT_DATA_PREFIX + projectId;
+            localStorage.removeItem(key); // 1. 프로젝트 상세 데이터 삭제
+            
+            // ... (2. 프로젝트 목록에서 ID 제거 후 목록 업데이트 유지) ...
             let projectList = this.loadProjectList();
             projectList = projectList.filter(p => p.id !== projectId);
             this.saveProjectList(projectList);
