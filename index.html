@@ -13,16 +13,24 @@
 </head>
 <body>
     <header>
-        <h1>🐳 Dockerfile 생성 마법사</h1>
-        <p>Docker 초보자를 위한 단계별 Dockerfile 자동 생성 웹앱입니다.</p>
-        <button id="theme-toggle-btn">🌙 다크 모드 토글</button>
-    </header>
+    <h1>🐳 Dockerfile 생성 마법사</h1>
+    <p>Docker 초보자를 위한 단계별 Dockerfile 자동 생성 웹앱입니다.</p>
+    <button id="theme-toggle-btn">🌙 다크 모드 토글</button>
+</header>
+
+<div class="main-layout-container">
+
+    <aside id="sidebar-container" class="sidebar-panel">
+        <h2>📁 저장된 프로젝트</h2>
+        <ul id="project-list">
+            <li class="empty-state">프로젝트가 없습니다.</li>
+        </ul>
+        <button id="new-project-btn">✨ 새 프로젝트 시작</button>
+    </aside>
 
     <main class="app-container">
         <section class="config-panel">
-            <h2>설정 입력</h2>
-            <div id="step-container">
-                </div>
+            <div id="step-container"></div>
             
             <div class="action-buttons">
                 <button id="prev-step" disabled>이전</button>
@@ -31,14 +39,11 @@
         </section>
 
         <section class="preview-panel">
-            <h2>코드 미리보기</h2>
-            <div id="code-preview">
-                <pre><code id="dockerfile-preview" class="language-dockerfile">Dockerfile 코드가 여기에 표시됩니다.</code></pre>
-
-                <pre><code id="makefile-preview" class="language-makefile">Makefile 코드가 여기에 표시됩니다.</code></pre>
-            </div>
-        </section>
+            <h2>📜 Dockerfile & Makefile 미리보기</h2>
+            </section>
     </main>
+
+</div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/dockerfile.min.js"></script>
