@@ -84,7 +84,7 @@ function updateCodePreview(configData) {
     if (makefileElement) {
         makefileElement.textContent = makefileContent || 'Makefile 코드가 여기에 표시됩니다.';
     
-        delete dockerfileElement.dataset.highlighted;
+        delete makefileElement.dataset.highlighted;
     }
 
     // 코드 하이라이팅 적용
