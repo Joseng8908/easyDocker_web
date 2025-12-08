@@ -1,17 +1,16 @@
 // ===========================================
-// src/services/StorageManager.js (수정)
+// src/services/StorageManager.js
 // ===========================================
 
+/**
+ * 브라우저의 localStorage를 사용하여 여러 프로젝트의 설정 데이터를 
+ * 저장, 로드, 삭제하는 역할을 담당하는 서비스 모듈입니다.
+ */
 export class StorageManager {
     
-    // 💡 프로젝트 목록의 키 상수
+    // 프로젝트 목록을 저장하는 고정 키
     static PROJECT_LIST_KEY = 'docker_configs_list';
     
-    constructor() {
-        // 이전에 사용했던 단일 저장 키는 이제 사용하지 않거나, 호환성을 위해 유지합니다.
-        // 여기서는 프로젝트 목록 관리 기능에 집중합니다.
-    }
-
     /**
      * @description 프로젝트 목록(ID와 이름)을 localStorage에 저장합니다.
      * @param {Array<Object>} projectList - [{ id: string, name: string, timestamp: number }]
@@ -22,6 +21,7 @@ export class StorageManager {
             localStorage.setItem(StorageManager.PROJECT_LIST_KEY, data);
         } catch (error) {
             console.error("Error saving project list to localStorage:", error);
+            // 💡 사용자에게 저장 공간 부족 알림 등을 제공할 수 있음
         }
     }
 
@@ -32,6 +32,7 @@ export class StorageManager {
     loadProjectList() {
         try {
             const data = localStorage.getItem(StorageManager.PROJECT_LIST_KEY);
+            // 데이터가 없거나 파싱 오류가 발생하면 빈 배열 반환
             return data ? JSON.parse(data) : [];
         } catch (error) {
             console.error("Error loading project list from localStorage:", error);
@@ -41,14 +42,14 @@ export class StorageManager {
 
     /**
      * @description 단일 프로젝트의 상세 설정(configData)을 저장합니다.
-     * @param {string} projectId - 프로젝트의 고유 ID
+     * @param {string} projectId - 프로젝트의 고유 ID (localStorage의 키로 사용됨)
      * @param {Object} configData - state.configData 객체
      */
     saveProject(projectId, configData) {
         if (!projectId) return;
         try {
             const data = JSON.stringify(configData);
-            // 프로젝트 ID를 키로 사용
+            // 프로젝트 ID를 키로 사용하여 상세 설정 저장
             localStorage.setItem(projectId, data); 
         } catch (error) {
             console.error(`Error saving project ${projectId}:`, error);
@@ -73,7 +74,7 @@ export class StorageManager {
 
     /**
      * @description 특정 프로젝트와 해당 프로젝트 ID를 목록에서 모두 삭제합니다.
-     * @param {string} projectId - 프로젝트의 고유 ID
+     * @param {string} projectId - 삭제할 프로젝트의 고유 ID
      */
     deleteProject(projectId) {
         if (!projectId) return;
@@ -87,14 +88,21 @@ export class StorageManager {
             projectList = projectList.filter(p => p.id !== projectId);
             this.saveProjectList(projectList);
             
-            console.log(`Project ${projectId} deleted successfully.`);
+            console.log(`Project ${projectId} and associated data deleted.`);
 
         } catch (error) {
             console.error(`Error deleting project ${projectId}:`, error);
         }
     }
     
-    // 💡 참고: 기존 loadState/saveState는 단일 프로젝트 저장 방식이었으므로,
-    // 이 클래스 내에서 더 이상 사용하지 않거나, 새 메소드로 대체합니다.
-    // 기존의 loadState/saveState 호출을 모두 saveProject/loadProject로 대체해야 합니다.
+    /**
+     * @description (기존 단일 저장 방식과의 호환성을 위해 남겨둡니다. 현재는 사용되지 않습니다.)
+     */
+    loadState() {
+        // 단일 키 대신, 현재는 loadProject()를 사용해야 합니다.
+        return null; 
+    }
+    saveState() {
+        // 단일 키 대신, 현재는 saveProject()를 사용해야 합니다.
+    }
 }
