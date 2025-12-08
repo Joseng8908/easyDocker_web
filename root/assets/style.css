@@ -80,6 +80,8 @@ h1 {
 .config-panel {
     flex: 1;
     min-width: 450px;
+    position: relative;
+    padding-bottom: 80px
 }
 
 /* 프리뷰 패널 (오른쪽) */
@@ -132,9 +134,13 @@ h1 {
 
 /* 버튼 스타일 */
 .action-buttons, .result-actions {
-    margin-top: 25px;
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    right: 30px;
     display: flex;
     justify-content: space-between;
+    margin-top: 0;
 }
 
 button {
