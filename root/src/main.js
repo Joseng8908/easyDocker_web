@@ -70,7 +70,7 @@ function updateCodePreview(configData) {
     finalDockerfileContent = dockerfileContent;
     finalMakefileContent = makefileContent;
     
-    storageManager.saveState(state.configData); // 상태 저장
+    storageManager.saveProject(currentProjectId, state.configData); // 상태 저장
     
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
     const dockerfileElement = document.getElementById('dockerfile-preview');
@@ -133,6 +133,17 @@ function initializeApp() {
     // storage 초기화
     storageManager = new StorageManager();
 
+    // 💡 Sidebar 컴포넌트 초기화
+    sidebar = new Sidebar(
+        'sidebar-container', // HTML에 추가될 사이드바 컨테이너 ID
+        loadProjectIntoApp,  // 프로젝트 로드 시 호출될 콜백 함수
+        startNewProject      // 새 프로젝트 시작 시 호출될 콜백 함수
+    );
+
+    // 💡 저장된 프로젝트 목록을 로드하고 사이드바 렌더링
+    const initialProjectList = storageManager.loadProjectList() || [];
+    sidebar.render(initialProjectList);
+
     // 이전에 저장된 상태 불러오기
     const savedConfig = storageManager.loadState();
     if (savedConfig) {
@@ -163,6 +174,19 @@ function initializeApp() {
     // 첫 단계 렌더링 및 초기 프리뷰 업데이트
     renderCurrentStep();
     updateCodePreview(state.configData);
+}
+
+// 💡 Sidebar 콜백 함수 1: 프로젝트 로드
+function loadProjectIntoApp(projectId) {
+    // ... (storageManager.loadProject(projectId) 호출하여 state.configData 업데이트)
+    // ... (currentProjectId 업데이트 및 renderCurrentStep, updateCodePreview 호출)
+}
+
+// 💡 Sidebar 콜백 함수 2: 새 프로젝트 시작
+function startNewProject() {
+    // ... (state.configData를 기본 초기값으로 재설정)
+    // ... (currentProjectId를 새 ID로 설정)
+    // ... (renderCurrentStep, updateCodePreview 호출)
 }
 
 function renderCurrentStep() {
