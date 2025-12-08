@@ -20,7 +20,20 @@ const HLJS_THEME_LINK_ID = 'hljs-theme-link';
 const state = {
     currentStep: 1,
     maxSteps: 4, 
-    configData: {} // 모든 설정 데이터가 저장될 곳
+    configData: {
+        step1: {
+            baseImage: 'alpine:latest',
+            language: 'none',
+        },
+        step2: {
+            port: '8080',
+            runCommands: '',
+        },
+        step3: {
+            target: 'all',
+        },
+        step4: {}
+    } // 모든 설정 데이터가 저장될 곳
 };
 
 // 모듈 인스턴스 변수
