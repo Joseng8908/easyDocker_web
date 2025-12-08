@@ -5,6 +5,7 @@ import { FormRenderer } from './components/FormRenderer.js'; // 모듈 import
 import { TemplateGenerator } from './services/TemplateGenerator.js'; // 모듈 import
 import { Downloader } from './services/Downloader.js';
 import { StorageManager } from './services/StorageManager.js';
+import { Sidebar } from './components/Sidebar.js';
 // ===========================================
 const DOCKERFILE_PREVIEW_ID = 'dockerfile-code';
 const STEP_CONTAINER_ID = 'step-container';
@@ -42,7 +43,8 @@ let formRenderer;
 let finalDockerfileContent = '';
 let finalMakefileContent = '';
 let storageManager = new StorageManager();
-
+let sidebar;
+let currentProjectId = 'default_starter_project'; // 기본 프로젝트 ID
 
 // ===========================================
 // 초기화 함수 및 이벤트 리스너 설정
@@ -71,6 +73,19 @@ function updateCodePreview(configData) {
     finalMakefileContent = makefileContent;
     
     storageManager.saveProject(currentProjectId, state.configData); // 상태 저장
+    
+    const newProjectName = configData.step1.projectName;
+    if (newProjectName) {
+        let projectList = storageManager.loadProjectList();
+        const projectIndex = projectList.findIndex(p => p.id === currentProjectId);
+        
+        if (projectIndex !== -1 && projectList[projectIndex].name !== newProjectName) {
+            projectList[projectIndex].name = newProjectName;
+            projectList[projectIndex].timestamp = Date.now(); // 최근 사용으로 업데이트
+            storageManager.saveProjectList(projectList);
+            sidebar.render(currentProjectId); // 사이드바 렌더링하여 이름 변경 반영
+        }
+    }
     
     // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
     const dockerfileElement = document.getElementById('dockerfile-preview');
@@ -127,39 +142,44 @@ function setNextButtonDisabledState(isValid) {
 
 function initializeApp() {
     console.log("앱 초기화 시작 - Vanilla JS Modules");
-    // 다크 모드 설정 로드
     loadTheme();
+    storageManager = new StorageManager(); 
 
-    // storage 초기화
-    storageManager = new StorageManager();
-
-    // 💡 Sidebar 컴포넌트 초기화
-    sidebar = new Sidebar(
-        'sidebar-container', // HTML에 추가될 사이드바 컨테이너 ID
-        loadProjectIntoApp,  // 프로젝트 로드 시 호출될 콜백 함수
-        startNewProject      // 새 프로젝트 시작 시 호출될 콜백 함수
-    );
-
-    // 💡 저장된 프로젝트 목록을 로드하고 사이드바 렌더링
-    const initialProjectList = storageManager.loadProjectList() || [];
-    sidebar.render(initialProjectList);
-
-    // 이전에 저장된 상태 불러오기
-    const savedConfig = storageManager.loadState();
-    if (savedConfig) {
-        state.configData = savedConfig;
-        console.log("이전 상태 불러오기 완료:", savedConfig);
-    } else {
-        console.log("저장된 상태가 없습니다. 초기 상태로 시작합니다.");
-    }
-    // FormRenderer 인스턴스 생성 시, 프리뷰 업데이트 함수를 콜백으로 전달
+    // 💡 1. FormRenderer를 먼저 초기화해야 합니다.
+    //    loadProjectIntoApp 또는 startNewProject 내에서 formRenderer.render()를 호출하기 때문입니다.
     formRenderer = new FormRenderer(
         STEP_CONTAINER_ID, 
-        state.configData, 
+        state.configData, // 초기 configData 전달 (나중에 로드된 데이터로 덮어씌워짐)
         updateCodePreview,
         setNextButtonDisabledState
     ); 
+
+    // 💡 2. Sidebar 인스턴스 생성 (FormRenderer 생성 후)
+    sidebar = new Sidebar({
+        onProjectSelected: loadProjectIntoApp,
+        onNewProject: startNewProject,
+    });
     
+    // 💡 3. 초기 프로젝트 로드 로직 실행
+    const projectList = storageManager.loadProjectList();
+    
+    if (projectList.length > 0) {
+        const latestProject = projectList.sort((a, b) => b.timestamp - a.timestamp)[0];
+        // loadProjectIntoApp 내부에서 renderCurrentStep() 호출
+        loadProjectIntoApp(latestProject.id); 
+        console.log("최근 프로젝트 불러오기 완료:", latestProject.name);
+    } else {
+        // startNewProject 내부에서 renderCurrentStep() 호출
+        startNewProject("My First Docker App"); // 이름을 인수로 전달하도록 startNewProject를 수정해야 함
+        // 참고: 현재 startNewProject는 prompt를 사용하므로, 이 인수는 무시됩니다.
+    }
+    
+    // 💡 4. Sidebar 초기화 (currentProjectId가 이제 로드 또는 생성 후 확정됨)
+    sidebar.initialize(currentProjectId); 
+
+    // 🔴 제거: 이전에 사용하던 단일 상태 로드 로직 제거 (로직 충돌 방지)
+    // const savedConfig = storageManager.loadState(); // 제거
+
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
     const prevButton = document.getElementById(PREV_BUTTON_ID);
 
@@ -171,9 +191,10 @@ function initializeApp() {
     nextButton.addEventListener('click', handleNextStep);
     prevButton.addEventListener('click', handlePrevStep);
 
-    // 첫 단계 렌더링 및 초기 프리뷰 업데이트
-    renderCurrentStep();
-    updateCodePreview(state.configData);
+    // 🔴 제거: renderCurrentStep()과 updateCodePreview()는 
+    //        loadProjectIntoApp 또는 startNewProject 내부에서 이미 호출됩니다.
+    // renderCurrentStep(); 
+    // updateCodePreview(state.configData);
 }
 
 // 💡 Sidebar 콜백 함수 1: 프로젝트 로드
@@ -279,6 +300,74 @@ function loadTheme() {
         // 💡 초기 로드 시 라이트 테마 적용
         if (themeLink) themeLink.href = HLJS_THEME_LIGHT;
     }
+}
+
+// ===========================================
+// src/main.js (새로운 프로젝트 관리 함수 추가)
+// ===========================================
+
+/**
+ * @description 특정 프로젝트 ID의 데이터를 불러와 앱 상태를 업데이트하고 UI를 리렌더링합니다.
+ * @param {string} projectId - 로드할 프로젝트의 고유 ID
+ */
+function loadProjectIntoApp(projectId) {
+    if (currentProjectId === projectId) return; // 이미 활성화된 프로젝트면 무시
+
+    const loadedConfig = storageManager.loadProject(projectId);
+
+    if (loadedConfig) {
+        currentProjectId = projectId; // 현재 ID 업데이트
+        state.configData = loadedConfig; // 상태 데이터 교체
+        state.currentStep = 1; // 로드 후 첫 단계로 이동
+
+        console.log(`프로젝트 로드 완료: ${projectId}`);
+        
+        renderCurrentStep(); // 폼 렌더링
+        updateCodePreview(state.configData); // 코드 프리뷰 업데이트
+        sidebar.render(currentProjectId); // 사이드바 활성 상태 업데이트
+    } else {
+        console.error(`프로젝트 ID ${projectId}를 찾을 수 없습니다.`);
+        // 찾지 못했다면 새 프로젝트를 시작하도록 유도
+        startNewProject(); 
+    }
+}
+
+/**
+ * @description 새로운 프로젝트를 시작하고 기본 상태로 앱을 초기화합니다.
+ */
+function startNewProject() {
+    // 💡 새 고유 ID 생성 (간단하게 타임스탬프와 랜덤 문자열 조합)
+    const newProjectId = `proj_${Date.now()}`;
+    const newProjectName = prompt("새 프로젝트 이름을 입력하세요:", `New Project ${new Date().toLocaleTimeString()}`);
+    
+    if (!newProjectName) {
+        return; // 이름 입력 취소 시 중단
+    }
+
+    // 1. 새로운 상태 데이터 생성 (기본값)
+    state.configData = {
+        step1: { baseImage: 'alpine:latest', language: 'none', projectName: newProjectName.toLowerCase() },
+        step2: { port: '8080', runCommands: '' },
+        step3: { target: 'all' },
+        step4: {}
+    };
+
+    // 2. 프로젝트 목록에 추가
+    const projectList = storageManager.loadProjectList();
+    projectList.push({ 
+        id: newProjectId, 
+        name: newProjectName, 
+        timestamp: Date.now() 
+    });
+    storageManager.saveProjectList(projectList);
+
+    // 3. 앱 상태 업데이트 및 리렌더링
+    currentProjectId = newProjectId;
+    state.currentStep = 1;
+    
+    renderCurrentStep();
+    updateCodePreview(state.configData);
+    sidebar.render(currentProjectId); // 사이드바에 새 프로젝트 반영 및 활성화
 }
 
 // 앱 시작
