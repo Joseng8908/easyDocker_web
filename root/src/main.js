@@ -176,10 +176,6 @@ function initializeApp() {
     
     // 💡 4. Sidebar 초기화 (currentProjectId가 이제 로드 또는 생성 후 확정됨)
     sidebar.initialize(currentProjectId); 
-
-    // 🔴 제거: 이전에 사용하던 단일 상태 로드 로직 제거 (로직 충돌 방지)
-    // const savedConfig = storageManager.loadState(); // 제거
-
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
     const prevButton = document.getElementById(PREV_BUTTON_ID);
 
@@ -191,23 +187,6 @@ function initializeApp() {
     nextButton.addEventListener('click', handleNextStep);
     prevButton.addEventListener('click', handlePrevStep);
 
-    // 🔴 제거: renderCurrentStep()과 updateCodePreview()는 
-    //        loadProjectIntoApp 또는 startNewProject 내부에서 이미 호출됩니다.
-    // renderCurrentStep(); 
-    // updateCodePreview(state.configData);
-}
-
-// 💡 Sidebar 콜백 함수 1: 프로젝트 로드
-function loadProjectIntoApp(projectId) {
-    // ... (storageManager.loadProject(projectId) 호출하여 state.configData 업데이트)
-    // ... (currentProjectId 업데이트 및 renderCurrentStep, updateCodePreview 호출)
-}
-
-// 💡 Sidebar 콜백 함수 2: 새 프로젝트 시작
-function startNewProject() {
-    // ... (state.configData를 기본 초기값으로 재설정)
-    // ... (currentProjectId를 새 ID로 설정)
-    // ... (renderCurrentStep, updateCodePreview 호출)
 }
 
 function renderCurrentStep() {
@@ -301,47 +280,41 @@ function loadTheme() {
         if (themeLink) themeLink.href = HLJS_THEME_LIGHT;
     }
 }
-
-// ===========================================
-// src/main.js (새로운 프로젝트 관리 함수 추가)
-// ===========================================
-
 /**
  * @description 특정 프로젝트 ID의 데이터를 불러와 앱 상태를 업데이트하고 UI를 리렌더링합니다.
  * @param {string} projectId - 로드할 프로젝트의 고유 ID
  */
 function loadProjectIntoApp(projectId) {
-    if (currentProjectId === projectId) return; // 이미 활성화된 프로젝트면 무시
+    if (currentProjectId === projectId) return;
 
     const loadedConfig = storageManager.loadProject(projectId);
 
     if (loadedConfig) {
-        currentProjectId = projectId; // 현재 ID 업데이트
-        state.configData = loadedConfig; // 상태 데이터 교체
-        state.currentStep = 1; // 로드 후 첫 단계로 이동
+        currentProjectId = projectId;
+        state.configData = loadedConfig;
+        state.currentStep = 1;
 
         console.log(`프로젝트 로드 완료: ${projectId}`);
         
-        renderCurrentStep(); // 폼 렌더링
-        updateCodePreview(state.configData); // 코드 프리뷰 업데이트
-        sidebar.render(currentProjectId); // 사이드바 활성 상태 업데이트
+        renderCurrentStep();
+        updateCodePreview(state.configData);
+        sidebar.render(currentProjectId);
     } else {
         console.error(`프로젝트 ID ${projectId}를 찾을 수 없습니다.`);
-        // 찾지 못했다면 새 프로젝트를 시작하도록 유도
-        startNewProject(); 
+        startNewProject();
     }
 }
 
 /**
  * @description 새로운 프로젝트를 시작하고 기본 상태로 앱을 초기화합니다.
  */
-function startNewProject() {
-    // 💡 새 고유 ID 생성 (간단하게 타임스탬프와 랜덤 문자열 조합)
+function startNewProject(defaultName) {
     const newProjectId = `proj_${Date.now()}`;
-    const newProjectName = prompt("새 프로젝트 이름을 입력하세요:", `New Project ${new Date().toLocaleTimeString()}`);
+    // defaultName 인수를 받도록 수정하는 것이 좋습니다.
+    const newProjectName = prompt("새 프로젝트 이름을 입력하세요:", defaultName || `New Project ${new Date().toLocaleTimeString()}`);
     
     if (!newProjectName) {
-        return; // 이름 입력 취소 시 중단
+        return;
     }
 
     // 1. 새로운 상태 데이터 생성 (기본값)
@@ -367,7 +340,7 @@ function startNewProject() {
     
     renderCurrentStep();
     updateCodePreview(state.configData);
-    sidebar.render(currentProjectId); // 사이드바에 새 프로젝트 반영 및 활성화
+    sidebar.render(currentProjectId);
 }
 
 // 앱 시작
