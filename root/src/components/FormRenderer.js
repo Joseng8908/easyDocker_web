@@ -20,14 +20,23 @@ export class FormRenderer {
                 projectName: 'my-app'
             };
         }
-        // ✅ 수정: Step 2 데이터 기본값 설정 (초기화)
         if (!this.config.step2) {
             this.config.step2 = {
-                workDir: '/app', 
-                installCommandOverride: '', 
+                workDir: '/app',
+                installCommandOverride: '',
                 copyPath: '.',
-                runUser: '',
+                runUser: ''
             };
+        }
+        if (!this.config.step3) {
+            this.config.step3 = {
+                buildArgs: '',
+                runPortMap: '8080:8080',
+                runVolume: ''
+            };
+        }
+        if (!this.config.step4) {
+            this.config.step4 = {};
         }
     }
 

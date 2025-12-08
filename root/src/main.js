@@ -320,9 +320,23 @@ function startNewProject(defaultName) {
 
     // 1. 새로운 상태 데이터 생성 (기본값)
     state.configData = {
-        step1: { baseImage: 'alpine:latest', language: 'none', projectName: newProjectName.toLowerCase() },
-        step2: { port: '8080', runCommands: '' },
-        step3: { target: 'all' },
+        step1: { 
+            language: 'node', 
+            version: '18', 
+            port: '3000', 
+            projectName: newProjectName.toLowerCase() 
+        },
+        step2: { 
+            workDir: '/app',
+            installCommandOverride: '',
+            copyPath: '.',
+            runUser: ''
+        },
+        step3: { 
+            buildArgs: '',
+            runPortMap: '8080:3000',
+            runVolume: ''
+        },
         step4: {}
     };
 
@@ -334,8 +348,11 @@ function startNewProject(defaultName) {
         timestamp: Date.now() 
     });
     storageManager.saveProjectList(projectList);
+    
+    // 3. 프로젝트 데이터 저장
+    storageManager.saveProject(newProjectId, state.configData);
 
-    // 3. 앱 상태 업데이트 및 리렌더링
+    // 4. 앱 상태 업데이트 및 리렌더링
     currentProjectId = newProjectId;
     state.currentStep = 1;
     

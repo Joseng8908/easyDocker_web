@@ -16,13 +16,13 @@
 
 .dark-mode {
     /* 다크 모드 재정의 */
-    --color-background-primary: #121212;
-    --color-background-secondary: #212121;
-    --color-text-primary: #f0f0f0;
-    --color-border: #444444;
-    --color-button-bg: #4a90e2; /* 다크 모드용 파란색 */
-    --color-button-text: #121212;
-    --color-label-accent: #89b4f8; /* 레이블 강조색 (밝은 파란색) */
+    --color-background-primary: #1a1a1a;
+    --color-background-secondary: #262626;
+    --color-text-primary: #e8e8e8;
+    --color-border: #404040;
+    --color-button-bg: #5b9df9;
+    --color-button-text: #ffffff;
+    --color-label-accent: #7eb3ff;
 }
 
 /* 2. 기본 리셋 및 폰트 설정 */
@@ -47,9 +47,9 @@ header {
 }
 
 .dark-mode header {
-    /* 다크 모드일 때 헤더 색상 조정 */
-    background-color: var(--color-background-secondary);
-    color: var(--color-text-primary);
+    background-color: #0d47a1;
+    color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 h1 {
@@ -99,7 +99,9 @@ h1 {
 }
 
 #project-list li:hover {
-    background-color: rgba(var(--color-button-bg), 0.1); /* hover 효과 */
+    background-color: var(--color-background-primary);
+    transform: translateX(5px);
+    transition: all 0.2s ease;
 }
 
 #project-list li.active {
@@ -127,38 +129,42 @@ h1 {
     color: white;
 }
 
-/* 메인 컨테이너 */
-.app-container {
-    display: flex;
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 20px;
-    gap: 30px;
-}
+/* 메인 컨테이너는 main-layout-container 내의 flex 요소로 이미 정의됨 */
 
 /* 패널 공통 스타일 */
 .config-panel, .preview-panel {
-    /* 배경색과 경계선에 변수 적용 */
     background-color: var(--color-background-secondary);
     padding: 30px;
     border-radius: 10px;
     border: 1px solid var(--color-border);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s, border-color 0.3s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
 /* 설정 입력 패널 (왼쪽) */
 .config-panel {
     flex: 1;
-    min-width: 450px;
+    min-width: 350px;
     position: relative;
-    padding-bottom: 80px
+    padding-bottom: 100px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
 }
 
 /* 프리뷰 패널 (오른쪽) */
 .preview-panel {
     flex: 1.5;
     position: relative;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.preview-panel h2 {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-background-secondary);
+    padding: 10px 0;
+    z-index: 10;
 }
 
 /* 폼 그룹 스타일 */
@@ -187,20 +193,44 @@ h1 {
 
 /* 에러 메시지 스타일 */
 .error-message {
-    color: #dc3545; /* 에러 색상은 고정 (빨간색) */
+    color: #ff6b6b;
     font-size: 0.9em;
     display: none;
 }
 
+.dark-mode .error-message {
+    color: #ff8787;
+}
+
+/* 입력 필드 유효성 표시 */
+.form-group input.is-invalid,
+.form-group select.is-invalid {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
 /* 코드 프리뷰 영역 */
 #code-preview {
-    /* 💡 Highlight.js가 배경과 색상을 담당하도록 고정값 제거 */
     padding: 15px;
     border-radius: 5px;
     overflow-x: auto;
-    height: 400px;
-    /* 프리뷰 영역 자체의 배경은 패널의 배경색을 따릅니다. */
-    border: 1px solid var(--color-border); 
+    overflow-y: auto;
+    max-height: 500px;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#code-preview pre {
+    margin: 0;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+#code-preview code {
+    font-size: 0.95em;
+    line-height: 1.5;
 }
 
 /* 버튼 스타일 */
@@ -262,4 +292,63 @@ button {
 /* 다크 모드일 때 다운로드 버튼 색상 재정의 */
 .dark-mode .result-actions button {
     background-color: var(--color-button-bg);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .main-layout-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .sidebar-panel {
+        width: 100%;
+        min-width: auto;
+        max-height: none;
+    }
+    
+    .app-container {
+        flex-direction: column;
+    }
+    
+    .config-panel, .preview-panel {
+        flex: 1 !important;
+        min-width: auto !important;
+    }
+}
+
+/* 스크롤바 스타일링 (다크 모드용) */
+.dark-mode ::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 4px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #505050;
+}
+
+/* 라이트 모드 스크롤바 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }

@@ -49,9 +49,9 @@ export class StorageManager {
         if (!projectId) return;
         try {
             const data = JSON.stringify(configData);
-            // 💡 수정: 고유 접두사를 키 앞에 붙여서 충돌 방지
             const key = StorageManager.PROJECT_DATA_PREFIX + projectId; 
-            localStorage.setItem(key, data); 
+            localStorage.setItem(key, data);
+            console.log(`프로젝트 ${projectId} 저장 완료`);
         } catch (error) {
             console.error(`Error saving project ${projectId}:`, error);
         }
@@ -65,10 +65,11 @@ export class StorageManager {
     loadProject(projectId) {
         if (!projectId) return null;
         try {
-            // 💡 수정: 로드할 때도 동일한 접두사를 사용하여 키를 찾습니다.
             const key = StorageManager.PROJECT_DATA_PREFIX + projectId;
             const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : null;
+            const loaded = data ? JSON.parse(data) : null;
+            if (loaded) console.log(`프로젝트 ${projectId} 로드 완료`);
+            return loaded;
         } catch (error) {
             console.error(`Error loading project ${projectId}:`, error);
             return null;
@@ -83,16 +84,14 @@ export class StorageManager {
         if (!projectId) return;
 
         try {
-            // 💡 수정: 삭제할 때도 동일한 접두사를 사용하여 키를 지정합니다.
             const key = StorageManager.PROJECT_DATA_PREFIX + projectId;
-            localStorage.removeItem(key); // 1. 프로젝트 상세 데이터 삭제
+            localStorage.removeItem(key);
             
-            // ... (2. 프로젝트 목록에서 ID 제거 후 목록 업데이트 유지) ...
             let projectList = this.loadProjectList();
             projectList = projectList.filter(p => p.id !== projectId);
             this.saveProjectList(projectList);
             
-            console.log(`Project ${projectId} and associated data deleted.`);
+            console.log(`프로젝트 ${projectId} 삭제 완료`);
 
         } catch (error) {
             console.error(`Error deleting project ${projectId}:`, error);
