@@ -24,6 +24,7 @@ const state = {
         step1: {
             baseImage: 'alpine:latest',
             language: 'none',
+            projectName: 'my-docker-app',
         },
         step2: {
             port: '8080',

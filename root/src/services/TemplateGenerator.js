@@ -100,8 +100,9 @@ CMD ["sh", "-c", "${startCommand}"]
      */
     generateMakefile(configData) {
         const { step1, step2, step3 } = configData;
+        const projectName = step1.projectName || 'my-docker-app';
         const appName = step1.projectName.toLowerCase(); // 컨테이너 이름은 소문자로
-        const { language } = step2;
+        const { language } = step1.language || 'none';
         
         // Step 3 옵션 처리
         const buildArgs = step3.buildArgs ? `${step3.buildArgs}` : ''; // 예: --no-cache
