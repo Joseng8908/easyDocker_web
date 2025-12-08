@@ -115,8 +115,10 @@ header p {
     border: 1px solid var(--color-border);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     overflow-y: auto;
-    max-height: calc(100vh - 120px);
+    height: calc(100vh - 140px);
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-panel h2 {
@@ -124,6 +126,7 @@ header p {
     font-size: 16px;
     font-weight: 600;
     color: var(--color-text-primary);
+    flex-shrink: 0;
 }
 
 /* 7. 프로젝트 목록 스타일 */
@@ -131,6 +134,8 @@ header p {
     list-style: none;
     padding: 0;
     margin: 0 0 16px 0;
+    flex: 1;
+    overflow-y: auto;
 }
 
 #project-list li {
@@ -205,6 +210,8 @@ header p {
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 #new-project-btn:hover {
@@ -220,6 +227,7 @@ header p {
     flex: 1;
     align-items: flex-start;
     width: 100%;
+    height: calc(100vh - 140px);
 }
 
 /* 10. 패널 공통 스타일 */
@@ -230,6 +238,10 @@ header p {
     border: 1px solid var(--color-border);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .config-panel:hover, .preview-panel:hover {
@@ -238,14 +250,9 @@ header p {
 
 /* 11. 설정 입력 패널 (왼쪽) */
 .config-panel {
-    flex: 1;
-    min-width: 380px;
+    flex: 0 0 420px;
     position: relative;
     padding-bottom: 120px;
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
 }
 
 .config-panel h3 {
@@ -255,16 +262,17 @@ header p {
     color: var(--color-text-primary);
     border-bottom: 2px solid var(--color-button-bg);
     padding-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.config-panel > *:not(h3):not(.action-buttons):not(.form-group) {
+    flex-shrink: 0;
 }
 
 /* 12. 프리뷰 패널 (오른쪽) */
 .preview-panel {
     flex: 1;
     position: relative;
-    max-height: calc(100vh - 140px);
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
 }
 
 .preview-panel h2 {
@@ -277,11 +285,13 @@ header p {
     font-weight: 600;
     border-bottom: 2px solid var(--color-button-bg);
     z-index: 10;
+    flex-shrink: 0;
 }
 
 /* 13. 폼 그룹 스타일 */
 .form-group {
     margin-bottom: 18px;
+    flex-shrink: 0;
 }
 
 .form-group label {
@@ -338,12 +348,13 @@ header p {
     border-radius: 6px;
     overflow-x: auto;
     overflow-y: auto;
-    max-height: 350px;
+    flex: 1;
     border: 1px solid var(--color-border);
     background-color: var(--color-background-primary);
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-height: 300px;
 }
 
 #code-preview pre {
