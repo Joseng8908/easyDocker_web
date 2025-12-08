@@ -30,6 +30,14 @@ export class Sidebar {
     _setupEventListeners() {
         // 프로젝트 목록 항목 클릭 이벤트
         this.projectListElement.addEventListener('click', (e) => {
+            // 삭제 버튼 클릭 감지
+            if (e.target.classList.contains('delete-project-btn')) {
+                e.stopPropagation();
+                const projectId = e.target.dataset.projectId;
+                this._handleDeleteProject(projectId);
+                return;
+            }
+
             const listItem = e.target.closest('li[data-project-id]');
             if (listItem) {
                 const projectId = listItem.dataset.projectId;
@@ -43,6 +51,31 @@ export class Sidebar {
         this.newProjectButton.addEventListener('click', () => {
             this.callbacks.onNewProject();
         });
+    }
+
+    /**
+     * @description 프로젝트 삭제를 처리합니다.
+     * @param {string} projectId - 삭제할 프로젝트의 ID
+     */
+    _handleDeleteProject(projectId) {
+        if (confirm('정말로 이 프로젝트를 삭제하시겠습니까?')) {
+            this.storageManager.deleteProject(projectId);
+            
+            if (projectId === this.activeProjectId) {
+                // 현재 활성 프로젝트가 삭제된 경우
+                const projectList = this.storageManager.loadProjectList();
+                if (projectList.length > 0) {
+                    const nextProject = projectList[0];
+                    this.callbacks.onProjectSelected(nextProject.id);
+                } else {
+                    // 남은 프로젝트가 없으면 새 프로젝트 생성 콜백 호출
+                    this.callbacks.onNewProject();
+                }
+            } else {
+                // 다른 프로젝트가 삭제된 경우 현재 목록만 갱신
+                this.render(this.activeProjectId);
+            }
+        }
     }
 
     /**
@@ -71,7 +104,32 @@ export class Sidebar {
         projectList.forEach(project => {
             const listItem = document.createElement('li');
             listItem.dataset.projectId = project.id;
-            listItem.textContent = project.name;
+            
+            // 프로젝트 이름과 삭제 버튼을 포함하는 컨테이너
+            const container = document.createElement('div');
+            container.style.display = 'flex';
+            container.style.justifyContent = 'space-between';
+            container.style.alignItems = 'center';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = project.name;
+            container.appendChild(nameSpan);
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-project-btn';
+            deleteBtn.dataset.projectId = project.id;
+            deleteBtn.textContent = '✕';
+            deleteBtn.style.padding = '2px 8px';
+            deleteBtn.style.fontSize = '1.2em';
+            deleteBtn.style.backgroundColor = '#dc3545';
+            deleteBtn.style.color = 'white';
+            deleteBtn.style.border = 'none';
+            deleteBtn.style.borderRadius = '3px';
+            deleteBtn.style.cursor = 'pointer';
+            deleteBtn.style.minWidth = '30px';
+            container.appendChild(deleteBtn);
+            
+            listItem.appendChild(container);
 
             // 현재 활성화된 프로젝트에 'active' 클래스 추가
             if (project.id === activeId) {

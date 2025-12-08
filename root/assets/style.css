@@ -52,8 +52,10 @@ header {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
 }
 
-h1 {
-    margin: 0 0 5px 0;
+header p {
+    margin: 5px 0 0 0;
+    font-size: 0.95em;
+    opacity: 0.9;
 }
 
 /* 1. 새로운 최상위 레이아웃 컨테이너 정의 (사이드바 + 메인 콘텐츠) */
@@ -96,6 +98,9 @@ h1 {
     cursor: pointer;
     border: 1px solid var(--color-border);
     transition: background-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #project-list li:hover {
@@ -111,12 +116,28 @@ h1 {
     font-weight: bold;
 }
 
-/* 4. 기존 .app-container 수정 (설정 + 프리뷰 영역) */
+.delete-project-btn {
+    padding: 2px 8px !important;
+    font-size: 1.2em;
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 3px;
+    cursor: pointer;
+    min-width: 30px;
+    transition: background-color 0.2s;
+}
+
+.delete-project-btn:hover {
+    background-color: #c82333 !important;
+}
+
+/* 4. 메인 앱 컨테이너 (설정 + 프리뷰 영역) */
 .app-container {
     display: flex;
-    /* max-width, margin, padding 제거 (main-layout-container가 처리) */
     gap: 20px; 
     flex: 1; /* 남은 공간을 모두 차지 */
+    align-items: flex-start;
 }
 
 /* 5. 새 프로젝트 버튼 */

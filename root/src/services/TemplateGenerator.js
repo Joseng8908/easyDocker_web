@@ -103,6 +103,7 @@ CMD ["sh", "-c", "${startCommand}"]
         const projectName = step1.projectName || 'my-docker-app';
         const appName = projectName.toLowerCase();
         const language = step1.language || 'none';
+        const port = step1.port || '3000';
         
         // Step 3 옵션 처리
         const buildArgs = step3.buildArgs ? `${step3.buildArgs}` : ''; // 예: --no-cache

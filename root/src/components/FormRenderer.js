@@ -11,6 +11,7 @@ export class FormRenderer {
         this.config = configData;
         this.setNextButtonStateCallback = setNextButtonStateCallback;
         this.updateCallback = updateCallback;
+        this.config.currentStep = 1;
         // Step 1 데이터의 기본값 설정 (초기화)
         if (!this.config.step1) {
             this.config.step1 = {
@@ -41,7 +42,7 @@ export class FormRenderer {
     }
 
     updateConfig(newConfig) {
-    this.configData = newConfig;
+        this.config = newConfig;
     }
 
     /**

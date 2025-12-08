@@ -169,9 +169,8 @@ function initializeApp() {
         loadProjectIntoApp(latestProject.id); 
         console.log("최근 프로젝트 불러오기 완료:", latestProject.name);
     } else {
-        // startNewProject 내부에서 renderCurrentStep() 호출
-        startNewProject("My First Docker App"); // 이름을 인수로 전달하도록 startNewProject를 수정해야 함
-        // 참고: 현재 startNewProject는 prompt를 사용하므로, 이 인수는 무시됩니다.
+        // 프로젝트가 없으면 기본 프로젝트 생성
+        createDefaultProject();
     }
     
     // 💡 4. Sidebar 초기화 (currentProjectId가 이제 로드 또는 생성 후 확정됨)
@@ -293,8 +292,9 @@ function loadProjectIntoApp(projectId) {
         currentProjectId = projectId;
         state.configData = loadedConfig;
         state.currentStep = 1;
+        state.configData.currentStep = 1;
 
-        formRenderer.updateConfig(state.configData);
+        formRenderer.config = state.configData;
         console.log(`프로젝트 로드 완료: ${projectId}`);
         
         renderCurrentStep();
@@ -309,6 +309,59 @@ function loadProjectIntoApp(projectId) {
 /**
  * @description 새로운 프로젝트를 시작하고 기본 상태로 앱을 초기화합니다.
  */
+/**
+ * @description 기본 프로젝트를 자동으로 생성합니다 (초기 로드 시)
+ */
+function createDefaultProject() {
+    const newProjectId = `proj_${Date.now()}`;
+    const newProjectName = "My First Docker App";
+
+    // 1. 새로운 상태 데이터 생성 (기본값)
+    state.configData = {
+        step1: { 
+            language: 'node', 
+            version: '18', 
+            port: '3000', 
+            projectName: newProjectName.toLowerCase() 
+        },
+        step2: { 
+            workDir: '/app',
+            installCommandOverride: '',
+            copyPath: '.',
+            runUser: ''
+        },
+        step3: { 
+            buildArgs: '',
+            runPortMap: '8080:3000',
+            runVolume: ''
+        },
+        step4: {},
+        currentStep: 1
+    };
+
+    // 2. 프로젝트 목록에 추가
+    const projectList = storageManager.loadProjectList();
+    projectList.push({ 
+        id: newProjectId, 
+        name: newProjectName, 
+        timestamp: Date.now() 
+    });
+    storageManager.saveProjectList(projectList);
+    
+    // 3. 프로젝트 데이터 저장
+    storageManager.saveProject(newProjectId, state.configData);
+
+    // 4. 앱 상태 업데이트
+    currentProjectId = newProjectId;
+    state.currentStep = 1;
+    
+    formRenderer.config = state.configData;
+    renderCurrentStep();
+    updateCodePreview(state.configData);
+    sidebar.initialize(currentProjectId);
+    sidebar.render(currentProjectId);
+}
+
 function startNewProject(defaultName) {
     const newProjectId = `proj_${Date.now()}`;
     // defaultName 인수를 받도록 수정하는 것이 좋습니다.
