@@ -294,6 +294,7 @@ function loadProjectIntoApp(projectId) {
         state.configData = loadedConfig;
         state.currentStep = 1;
 
+        formRenderer.updateConfig(state.configData);
         console.log(`프로젝트 로드 완료: ${projectId}`);
         
         renderCurrentStep();

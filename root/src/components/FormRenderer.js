@@ -31,6 +31,10 @@ export class FormRenderer {
         }
     }
 
+    updateConfig(newConfig) {
+    this.configData = newConfig;
+    }
+
     /**
      * 현재 단계에 맞는 폼을 렌더링합니다.
      * @param {number} step - 현재 단계 번호 (1, 2, 3...)
