@@ -173,8 +173,7 @@ function initializeApp() {
         createDefaultProject();
     }
     
-    // 💡 4. Sidebar 초기화 (currentProjectId가 이제 로드 또는 생성 후 확정됨)
-    sidebar.initialize(currentProjectId); 
+    // 💡 4. 이벤트 리스너 설정
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
     const prevButton = document.getElementById(PREV_BUTTON_ID);
 
@@ -297,9 +296,9 @@ function loadProjectIntoApp(projectId) {
         formRenderer.config = state.configData;
         console.log(`프로젝트 로드 완료: ${projectId}`);
         
+        sidebar.render(currentProjectId);
         renderCurrentStep();
         updateCodePreview(state.configData);
-        sidebar.render(currentProjectId);
     } else {
         console.error(`프로젝트 ID ${projectId}를 찾을 수 없습니다.`);
         startNewProject();
@@ -356,10 +355,9 @@ function createDefaultProject() {
     state.currentStep = 1;
     
     formRenderer.config = state.configData;
+    sidebar.render(currentProjectId);
     renderCurrentStep();
     updateCodePreview(state.configData);
-    sidebar.initialize(currentProjectId);
-    sidebar.render(currentProjectId);
 }
 
 function startNewProject(defaultName) {
@@ -390,7 +388,8 @@ function startNewProject(defaultName) {
             runPortMap: '8080:3000',
             runVolume: ''
         },
-        step4: {}
+        step4: {},
+        currentStep: 1
     };
 
     // 2. 프로젝트 목록에 추가
@@ -409,9 +408,10 @@ function startNewProject(defaultName) {
     currentProjectId = newProjectId;
     state.currentStep = 1;
     
+    formRenderer.config = state.configData;
+    sidebar.render(currentProjectId);
     renderCurrentStep();
     updateCodePreview(state.configData);
-    sidebar.render(currentProjectId);
 }
 
 // 앱 시작

@@ -6,177 +6,259 @@
 :root {
     /* 라이트 모드 기본값 */
     --color-background-primary: #ffffff; /* 전체 배경 */
-    --color-background-secondary: #f4f4f4; /* 카드, 설정 패널 배경 */
-    --color-text-primary: #333333; /* 기본 텍스트 색상 */
-    --color-border: #cccccc; /* 경계선 색상 */
-    --color-button-bg: #007bff; /* 버튼 기본 배경 (파란색) */
+    --color-background-secondary: #f8f9fa; /* 카드, 설정 패널 배경 */
+    --color-text-primary: #2c3e50; /* 기본 텍스트 색상 */
+    --color-border: #e1e4e8; /* 경계선 색상 */
+    --color-button-bg: #0066cc; /* 버튼 기본 배경 (파란색) */
     --color-button-text: #ffffff;
-    --color-label-accent: #007bff; /* 레이블 강조색 */
+    --color-label-accent: #0066cc; /* 레이블 강조색 */
+    --color-success: #28a745;
+    --color-danger: #dc3545;
 }
 
 .dark-mode {
     /* 다크 모드 재정의 */
-    --color-background-primary: #1a1a1a;
-    --color-background-secondary: #262626;
-    --color-text-primary: #e8e8e8;
-    --color-border: #404040;
-    --color-button-bg: #5b9df9;
+    --color-background-primary: #0d1117;
+    --color-background-secondary: #161b22;
+    --color-text-primary: #c9d1d9;
+    --color-border: #30363d;
+    --color-button-bg: #238636;
     --color-button-text: #ffffff;
-    --color-label-accent: #7eb3ff;
+    --color-label-accent: #58a6ff;
+    --color-success: #238636;
+    --color-danger: #da3633;
 }
 
 /* 2. 기본 리셋 및 폰트 설정 */
-body {
-    /* 폰트 및 기본 텍스트 색상 적용 */
-    font-family: Arial, sans-serif;
-    background-color: var(--color-background-primary);
-    color: var(--color-text-primary);
-    transition: background-color 0.3s, color 0.3s; /* 부드러운 전환 효과 */
-    margin: 0;
+* {
+    box-sizing: border-box;
 }
 
-header {
-    /* 배경색과 텍스트색에 변수 적용 */
-    background-color: var(--color-button-bg);
-    color: var(--color-button-text);
-    padding: 20px 40px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--color-background-primary);
+    color: var(--color-text-primary);
     transition: background-color 0.3s, color 0.3s;
-    position: relative; /* 버튼 배치를 위해 */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* 3. 헤더 스타일 */
+header {
+    background: linear-gradient(135deg, var(--color-button-bg) 0%, #0052a3 100%);
+    color: var(--color-button-text);
+    padding: 25px 40px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s, color 0.3s;
+    position: relative;
 }
 
 .dark-mode header {
-    background-color: #0d47a1;
-    color: #ffffff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #0d47a1 0%, #1a3a52 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+header h1 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 header p {
-    margin: 5px 0 0 0;
-    font-size: 0.95em;
-    opacity: 0.9;
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.95;
+    font-weight: 400;
 }
 
-/* 1. 새로운 최상위 레이아웃 컨테이너 정의 (사이드바 + 메인 콘텐츠) */
-.main-layout-container {
-    display: flex;
-    max-width: 1400px; /* 💡 사이드바 공간 확보를 위해 너비 확장 */
-    margin: 30px auto;
-    padding: 0 20px;
-    gap: 20px; /* 섹션 간 간격 */
-}
-
-/* 2. 사이드바 패널 스타일 */
-.sidebar-panel {
-    width: 250px; /* 💡 사이드바 너비 고정 */
-    min-width: 250px;
-    background-color: var(--color-background-secondary);
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    /* 사이드바는 스크롤이 가능하도록 */
-    overflow-y: auto; 
-    max-height: calc(100vh - 100px); /* 화면 높이에 맞게 설정 */
-    
-    /* 다크 모드/라이트 모드 transition 적용 */
-    transition: background-color 0.3s, border-color 0.3s;
-}
-
-/* 3. 사이드바 목록 스타일 */
-#project-list {
-    list-style: none;
-    padding: 0;
-    margin-top: 15px;
-}
-
-#project-list li {
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 5px;
+/* 4. 테마 토글 버튼 */
+#theme-toggle-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--color-button-text);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 14px;
+    border-radius: 6px;
     cursor: pointer;
-    border: 1px solid var(--color-border);
-    transition: background-color 0.2s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-#project-list li:hover {
-    background-color: var(--color-background-primary);
-    transform: translateX(5px);
+    font-weight: 600;
+    font-size: 13px;
     transition: all 0.2s ease;
 }
 
-#project-list li.active {
-    /* 현재 활성화된 프로젝트 강조 */
-    background-color: var(--color-button-bg); 
-    color: var(--color-button-text);
-    font-weight: bold;
+#theme-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
-.delete-project-btn {
-    padding: 2px 8px !important;
-    font-size: 1.2em;
-    background-color: #dc3545 !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 3px;
-    cursor: pointer;
-    min-width: 30px;
-    transition: background-color 0.2s;
-}
-
-.delete-project-btn:hover {
-    background-color: #c82333 !important;
-}
-
-/* 4. 메인 앱 컨테이너 (설정 + 프리뷰 영역) */
-.app-container {
+/* 5. 메인 레이아웃 */
+.main-layout-container {
     display: flex;
-    gap: 20px; 
-    flex: 1; /* 남은 공간을 모두 차지 */
-    align-items: flex-start;
+    max-width: 1600px;
+    margin: 25px auto;
+    padding: 0 20px;
+    gap: 24px;
+    min-height: calc(100vh - 200px);
 }
 
-/* 5. 새 프로젝트 버튼 */
-#new-project-btn {
-    width: 100%;
-    margin-top: 20px;
-    padding: 12px;
-    /* 버튼 변수 사용 */
-    background-color: #28a745; 
-    color: white;
-}
-
-/* 메인 컨테이너는 main-layout-container 내의 flex 요소로 이미 정의됨 */
-
-/* 패널 공통 스타일 */
-.config-panel, .preview-panel {
+/* 6. 사이드바 패널 스타일 */
+.sidebar-panel {
+    width: 280px;
+    min-width: 280px;
     background-color: var(--color-background-secondary);
-    padding: 30px;
-    border-radius: 10px;
+    padding: 20px;
+    border-radius: 8px;
     border: 1px solid var(--color-border);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    overflow-y: auto;
+    max-height: calc(100vh - 120px);
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
-/* 설정 입력 패널 (왼쪽) */
-.config-panel {
+.sidebar-panel h2 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+/* 7. 프로젝트 목록 스타일 */
+#project-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+}
+
+#project-list li {
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background-primary);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+#project-list li:hover {
+    background-color: var(--color-background-secondary);
+    border-color: var(--color-button-bg);
+    transform: translateX(3px);
+}
+
+#project-list li.active {
+    background-color: var(--color-button-bg);
+    color: var(--color-button-text);
+    font-weight: 600;
+    border-color: var(--color-button-bg);
+}
+
+#project-list li.empty-state {
+    padding: 20px 12px;
+    text-align: center;
+    cursor: default;
+    color: #999;
+    font-size: 13px;
+    border: 2px dashed var(--color-border);
+}
+
+#project-list li.empty-state:hover {
+    transform: none;
+    background-color: var(--color-background-primary);
+}
+
+.delete-project-btn {
+    padding: 4px 8px !important;
+    font-size: 16px !important;
+    background-color: transparent !important;
+    color: var(--color-danger) !important;
+    border: none !important;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    min-width: auto !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-project-btn:hover {
+    background-color: rgba(220, 53, 69, 0.1) !important;
+}
+
+/* 8. 새 프로젝트 버튼 */
+#new-project-btn {
+    width: 100%;
+    padding: 10px 16px;
+    background-color: var(--color-success);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#new-project-btn:hover {
+    background-color: #20c997;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+/* 9. 메인 앱 컨테이너 (설정 + 프리뷰 영역) */
+.app-container {
+    display: flex;
+    gap: 24px;
     flex: 1;
-    min-width: 350px;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* 10. 패널 공통 스타일 */
+.config-panel, .preview-panel {
+    background-color: var(--color-background-secondary);
+    padding: 28px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.config-panel:hover, .preview-panel:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* 11. 설정 입력 패널 (왼쪽) */
+.config-panel {
+    flex: 0 0 420px;
     position: relative;
-    padding-bottom: 100px;
-    max-height: calc(100vh - 200px);
+    padding-bottom: 120px;
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
 }
 
-/* 프리뷰 패널 (오른쪽) */
+.config-panel h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    border-bottom: 2px solid var(--color-button-bg);
+    padding-bottom: 12px;
+}
+
+/* 12. 프리뷰 패널 (오른쪽) */
 .preview-panel {
-    flex: 1.5;
+    flex: 1;
     position: relative;
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
 }
 
@@ -184,60 +266,76 @@ header p {
     position: sticky;
     top: 0;
     background-color: var(--color-background-secondary);
-    padding: 10px 0;
+    padding: 0 0 12px 0;
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--color-button-bg);
     z-index: 10;
 }
 
-/* 폼 그룹 스타일 */
+/* 13. 폼 그룹 스타일 */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .form-group label {
     display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    /* 레이블 강조색에 변수 적용 */
-    color: var(--color-label-accent); 
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-text-primary);
+    font-size: 14px;
 }
 
 .form-group input, .form-group select {
     width: 100%;
-    padding: 10px;
-    /* 경계선 및 배경색에 변수 적용 (다크 모드 시 입력 필드 색상 변경) */
-    border: 1px solid var(--color-border); 
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
     background-color: var(--color-background-primary);
     color: var(--color-text-primary);
-    border-radius: 5px;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-/* 에러 메시지 스타일 */
-.error-message {
-    color: #ff6b6b;
-    font-size: 0.9em;
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--color-button-bg);
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.dark-mode .form-group input:focus, .dark-mode .form-group select:focus {
+    box-shadow: 0 0 0 3px rgba(58, 166, 255, 0.1);
+}
+
+/* 14. 에러 메시지 스타일 */
+.form-group .error-message {
+    color: var(--color-danger);
+    font-size: 12px;
     display: none;
+    margin-top: 4px;
+    font-weight: 500;
 }
 
-.dark-mode .error-message {
-    color: #ff8787;
+.form-group input.is-invalid, .form-group select.is-invalid {
+    border-color: var(--color-danger);
+    background-color: rgba(220, 53, 69, 0.02);
 }
 
-/* 입력 필드 유효성 표시 */
-.form-group input.is-invalid,
-.form-group select.is-invalid {
-    border-color: #dc3545;
-    background-color: rgba(220, 53, 69, 0.05);
+.form-group input.is-invalid:focus, .form-group select.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
 }
 
-/* 코드 프리뷰 영역 */
+/* 15. 코드 프리뷰 영역 */
 #code-preview {
-    padding: 15px;
-    border-radius: 5px;
+    padding: 16px;
+    border-radius: 6px;
     overflow-x: auto;
     overflow-y: auto;
-    max-height: 500px;
+    max-height: 550px;
     border: 1px solid var(--color-border);
+    background-color: var(--color-background-primary);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -245,81 +343,109 @@ header p {
 
 #code-preview pre {
     margin: 0;
-    border-radius: 5px;
+    border-radius: 6px;
     overflow-x: auto;
-}
-
-#code-preview code {
-    font-size: 0.95em;
-    line-height: 1.5;
-}
-
-/* 버튼 스타일 */
-.action-buttons, .result-actions {
-    position: absolute;
-    bottom: 20px;
-    left: 30px;
-    right: 30px;
-    display: flex;
-    justify-content: space-between;
-    margin-top: 0;
-}
-
-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s, color 0.2s;
-    /* 기본 버튼에 변수 적용 */
-    background-color: var(--color-button-bg); 
-    color: var(--color-button-text);
-}
-
-#prev-step, #next-step {
-    background-color: #28a745; /* 녹색 유지 (다크 모드 시 변경 고려 가능) */
-    color: white;
-}
-
-#next-step:hover, #prev-step:hover:not(:disabled) {
-    background-color: #218838;
-}
-
-#prev-step:disabled {
-    background-color: #6c757d; 
-    cursor: not-allowed;
-}
-
-/* 다운로드 및 토글 버튼 */
-.result-actions button, #theme-toggle-btn {
-    background-color: var(--color-button-bg); 
-    color: var(--color-button-text);
-}
-
-#theme-toggle-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background-color: var(--color-background-primary);
-    color: var(--color-text-primary);
+    background-color: var(--color-background-secondary);
+    padding: 14px;
     border: 1px solid var(--color-border);
 }
 
-#theme-toggle-btn:hover {
-    background-color: var(--color-background-secondary);
+#code-preview code {
+    font-size: 13px;
+    line-height: 1.5;
+    font-family: 'Monaco', 'Courier New', monospace;
 }
 
-/* 다크 모드일 때 다운로드 버튼 색상 재정의 */
-.dark-mode .result-actions button {
+/* 16. 버튼 스타일 */
+.action-buttons, .result-actions-final {
+    position: absolute;
+    bottom: 20px;
+    left: 28px;
+    right: 28px;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    z-index: 5;
+}
+
+.result-actions-final {
+    flex-direction: row-reverse;
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+#prev-step, #next-step {
+    background-color: var(--color-success);
+    color: white;
+    min-width: 100px;
+}
+
+#next-step:hover:not(:disabled), #prev-step:hover:not(:disabled) {
+    background-color: #20c997;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+#prev-step:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#next-step:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+}
+
+.result-actions button, #download-dockerfile, #download-makefile {
     background-color: var(--color-button-bg);
+    color: var(--color-button-text);
+    min-width: 150px;
 }
 
-/* 반응형 디자인 */
+.result-actions button:hover, #download-dockerfile:hover, #download-makefile:hover {
+    background-color: #0052a3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+.note-box {
+    background-color: rgba(0, 102, 204, 0.05);
+    border-left: 4px solid var(--color-button-bg);
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.dark-mode .note-box {
+    background-color: rgba(58, 166, 255, 0.05);
+}
+
+/* 17. 반응형 디자인 */
+@media (max-width: 1400px) {
+    .main-layout-container {
+        gap: 16px;
+    }
+    
+    .config-panel {
+        flex-basis: 380px;
+    }
+}
+
 @media (max-width: 1200px) {
     .main-layout-container {
         flex-direction: column;
-        gap: 15px;
+        gap: 20px;
     }
     
     .sidebar-panel {
@@ -330,46 +456,103 @@ button {
     
     .app-container {
         flex-direction: column;
+        gap: 20px;
     }
     
-    .config-panel, .preview-panel {
+    .config-panel {
+        flex: 1 !important;
+        min-width: auto !important;
+        flex-basis: auto;
+    }
+    
+    .preview-panel {
         flex: 1 !important;
         min-width: auto !important;
     }
 }
 
-/* 스크롤바 스타일링 (다크 모드용) */
-.dark-mode ::-webkit-scrollbar {
-    width: 8px;
+@media (max-width: 768px) {
+    header {
+        padding: 20px 15px;
+    }
+    
+    header h1 {
+        font-size: 22px;
+    }
+    
+    #theme-toggle-btn {
+        position: static;
+        width: 100%;
+        margin-top: 12px;
+    }
+    
+    .main-layout-container {
+        padding: 0 12px;
+        margin: 15px auto;
+    }
+    
+    .config-panel, .preview-panel {
+        padding: 20px;
+    }
+    
+    .action-buttons, .result-actions-final {
+        left: 20px;
+        right: 20px;
+        flex-direction: column;
+    }
+    
+    button {
+        width: 100%;
+    }
 }
 
-.dark-mode ::-webkit-scrollbar-track {
-    background: #1a1a1a;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb {
-    background: #404040;
-    border-radius: 4px;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb:hover {
-    background: #505050;
-}
-
-/* 라이트 모드 스크롤바 */
+/* 18. 스크롤바 스타일링 */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--color-background-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
+    background: var(--color-border);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+    background: var(--color-button-bg);
 }
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: #262626;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: #505050;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #707070;
+}
+
+/* 19. Highlight.js 테마 호환성 */
+.hljs {
+    background: var(--color-background-primary) !important;
+    color: var(--color-text-primary) !important;
+}
+
+.hljs-string { color: #0b7500; }
+.hljs-number { color: #005cc5; }
+.hljs-literal { color: #005cc5; }
+.hljs-attr { color: #6f42c1; }
+.hljs-title { color: #6f42c1; }
+.hljs-type { color: #d73a49; }
+
+.dark-mode .hljs-string { color: #85e89d; }
+.dark-mode .hljs-number { color: #79c0ff; }
+.dark-mode .hljs-literal { color: #79c0ff; }
+.dark-mode .hljs-attr { color: #79c0ff; }
+.dark-mode .hljs-title { color: #79c0ff; }
+.dark-mode .hljs-type { color: #ff7b72; }
