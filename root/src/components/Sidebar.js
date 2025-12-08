@@ -12,7 +12,7 @@ export class Sidebar {
      * @param {Object} callbacks - 메인 앱 로직과 연결하기 위한 콜백 함수 객체
      * @param {function(string): void} callbacks.onProjectSelected - 프로젝트가 선택될 때 호출될 함수 (projectId 전달)
      * @param {function(): void} callbacks.onNewProject - 새 프로젝트 시작 버튼이 눌렸을 때 호출될 함수
-     * @param {function(string): void} callbacks.onProjectDeleted - 프로젝트가 삭제될 때 호출될 함수 (projectId 전달)
+     * @param {function(): void} callbacks.onCreateDefaultProject - 마지막 프로젝트 삭제 시 기본 프로젝트 자동 생성
      */
     constructor(callbacks) {
         this.storageManager = new StorageManager();
@@ -68,8 +68,12 @@ export class Sidebar {
                     const nextProject = projectList[0];
                     this.callbacks.onProjectSelected(nextProject.id);
                 } else {
-                    // 남은 프로젝트가 없으면 새 프로젝트 생성 콜백 호출
-                    this.callbacks.onNewProject();
+                    // 남은 프로젝트가 없으면 기본 프로젝트 자동 생성
+                    if (this.callbacks.onCreateDefaultProject) {
+                        this.callbacks.onCreateDefaultProject();
+                    } else {
+                        this.callbacks.onNewProject();
+                    }
                 }
             } else {
                 // 다른 프로젝트가 삭제된 경우 현재 목록만 갱신

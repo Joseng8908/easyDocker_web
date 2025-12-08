@@ -157,7 +157,8 @@ function initializeApp() {
     // 💡 2. Sidebar 인스턴스 생성 (FormRenderer 생성 후)
     sidebar = new Sidebar({
         onProjectSelected: loadProjectIntoApp,
-        onNewProject: startNewProject,
+        onNewProject: createNewProjectWithPrompt,
+        onCreateDefaultProject: createDefaultProject,
     });
     
     // 💡 3. 초기 프로젝트 로드 로직 실행
@@ -195,13 +196,23 @@ function renderCurrentStep() {
     // 버튼 상태 업데이트 로직 (기존과 동일)
     const nextButton = document.getElementById(NEXT_BUTTON_ID);
     const prevButton = document.getElementById(PREV_BUTTON_ID);
+    const actionButtons = document.querySelector('.action-buttons');
+    
     prevButton.disabled = state.currentStep === 1;
 
     // '다음' 버튼 상태는 현재 단계의 유효성 검사 결과에 따라 결정
     if (state.currentStep < state.maxSteps) {
         formRenderer.validateAndShowFeedback(state.configData[`step${state.currentStep}`], state.currentStep);
+        // 이전/다음 버튼 표시
+        if (actionButtons) {
+            actionButtons.classList.remove('hidden');
+        }
     } else {
         setNextButtonDisabledState(false); // 마지막 단계에서는 비활성화
+        // Step 4에서는 이전/다음 버튼 숨기기
+        if (actionButtons) {
+            actionButtons.classList.add('hidden');
+        }
     }
 
     if (state.currentStep === state.maxSteps) { // state.maxSteps = 4
@@ -360,10 +371,12 @@ function createDefaultProject() {
     updateCodePreview(state.configData);
 }
 
-function startNewProject(defaultName) {
+/**
+ * @description prompt를 통해 새 프로젝트를 생성합니다 (버튼 클릭 시)
+ */
+function createNewProjectWithPrompt() {
     const newProjectId = `proj_${Date.now()}`;
-    // defaultName 인수를 받도록 수정하는 것이 좋습니다.
-    const newProjectName = prompt("새 프로젝트 이름을 입력하세요:", defaultName || `New Project ${new Date().toLocaleTimeString()}`);
+    const newProjectName = prompt("새 프로젝트 이름을 입력하세요:", `New Project ${new Date().toLocaleTimeString()}`);
     
     if (!newProjectName) {
         return;
