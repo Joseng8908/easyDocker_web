@@ -195,9 +195,14 @@ function renderCurrentStep() {
 
     if (state.currentStep === state.maxSteps) { // state.maxSteps = 3
         const downloadDockerfileBtn = document.getElementById('download-dockerfile');
+        const backToStep2Btn = document.getElementById('back-to-step2');
 
         if (downloadDockerfileBtn) {
             downloadDockerfileBtn.addEventListener('click', () => handleDownload('dockerfile'));
+        }
+
+        if (backToStep2Btn) {
+            backToStep2Btn.addEventListener('click', handlePrevStep);
         }
         
         // Step 3에서는 '다음' 버튼은 항상 비활성화 상태로 유지

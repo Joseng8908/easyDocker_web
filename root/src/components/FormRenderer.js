@@ -155,6 +155,7 @@ export class FormRenderer {
 
             <div class="result-actions-final">
                 <button id="download-dockerfile" class="btn-primary">📄 Dockerfile 다운로드</button>
+                <button id="back-to-step2" class="btn-secondary">⬅️ 뒤로가기</button>
             </div>
 
             <div class="note-box">

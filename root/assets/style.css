@@ -444,6 +444,18 @@ button {
     box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
 }
 
+#back-to-step2 {
+    background-color: var(--color-success);
+    color: white;
+    min-width: 100px;
+}
+
+#back-to-step2:hover {
+    background-color: #20c997;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
 .note-box {
     background-color: rgba(0, 102, 204, 0.05);
     border-left: 4px solid var(--color-button-bg);
