@@ -36,9 +36,6 @@ export class FormRenderer {
                 runVolume: ''
             };
         }
-        if (!this.config.step4) {
-            this.config.step4 = {};
-        }
     }
 
     updateConfig(newConfig) {
@@ -47,15 +44,14 @@ export class FormRenderer {
 
     /**
      * 현재 단계에 맞는 폼을 렌더링합니다.
-     * @param {number} step - 현재 단계 번호 (1, 2, 3...)
+     * @param {number} step - 현재 단계 번호 (1, 2, 3)
      */
     render(step) {
         this.container.innerHTML = ''; // 기존 내용 초기화
         
         if (step === 1) { this.renderStep1();} 
         else if (step === 2) { this.renderStep2(); }
-        else if (step === 3) { this.renderStep3(); }
-        else if (step === 4) { this.renderStep4(); } 
+        else if (step === 3) { this.renderStep3(); } 
     }
 
     // ===========================================
@@ -148,72 +144,26 @@ export class FormRenderer {
         this.attachEventListeners(2); 
     }
     // ===========================================
-    // Step 3: Makefile 설정 폼 
+    // Step 3: 최종 검토 및 Dockerfile 다운로드
     // ===========================================
     renderStep3() {
         //디버그용 콘솔 출력
         console.log("Rendering Step 3 Form");
-        if (!this.config.step3) {
-            this.config.step3 = {
-                buildArgs: '',
-                runPortMap: '8080:8080',
-                runVolume: '',
-            };
-        }
         const html = `
-            <h3>Step 3. Makefile 및 실행 옵션</h3>
-            <p>Makefile의 Docker 빌드/실행 명령에 추가될 옵션을 설정합니다.</p>
-            
-            <div class="form-group">
-                <label for="buildArgs">🏗️ 빌드 인자 (Build Arguments):</label>
-                <input type="text" id="buildArgs" name="buildArgs" 
-                        value="${this.config.step3.buildArgs || ''}" 
-                        placeholder="예: --no-cache, --pull">
-                <small class="error-message" id="error-buildArgs"></small>
-            </div>
-            
-            <div class="form-group">
-                <label for="runPortMap">🔗 실행 포트 매핑 (Run Port Map - H:C):</label>
-                <input type="text" id="runPortMap" name="runPortMap" 
-                        value="${this.config.step3.runPortMap || ''}" 
-                        placeholder="예: 8080:3000 (호스트:컨테이너)">
-                <small class="error-message" id="error-runPortMap"></small>
-            </div>
-
-            <div class="form-group">
-                <label for="runVolume">📂 볼륨 마운트 (Volume Mount - H:C):</label>
-                <input type="text" id="runVolume" name="runVolume" 
-                        value="${this.config.step3.runVolume || ''}" 
-                        placeholder="예: $(shell pwd)/data:/app/data">
-                <small class="error-message" id="error-runVolume"></small>
-            </div>
-        `;
-
-        this.container.innerHTML = html;
-        this.attachEventListeners(3); // 이벤트 리스너 부착
-    }
-    // ===========================================
-    // Step 4: 최종 검토 및 다운로드 폼
-    // ===========================================
-    renderStep4() {
-        console.log("Rendering Step 4 Form");
-        
-        const html = `
-            <h3>Step 4. 최종 파일 다운로드</h3>
-            <p>생성된 **Dockerfile**과 **Makefile**을 최종 검토하고 다운로드하세요. 이 파일들은 현재 프리뷰 패널에 표시되어 있습니다.</p>
+            <h3>Step 3. 최종 검토 및 다운로드</h3>
+            <p>생성된 <strong>Dockerfile</strong>을 최종 검토하고 다운로드하세요. 미리보기 패널에서 내용을 확인할 수 있습니다.</p>
 
             <div class="result-actions-final">
                 <button id="download-dockerfile" class="btn-primary">📄 Dockerfile 다운로드</button>
-                <button id="download-makefile" class="btn-primary">⚙️ Makefile 다운로드</button>
-                </div>
+            </div>
 
             <div class="note-box">
-                <p>파일을 다운로드하기 전에 반드시 **오른쪽 미리보기**를 통해 내용을 최종 확인해 주세요.</p>
+                <p>파일을 다운로드하기 전에 반드시 <strong>오른쪽 미리보기</strong>를 통해 내용을 최종 확인해 주세요.</p>
             </div>
         `;
 
         this.container.innerHTML = html;
-        // Step 4에서는 폼 필드가 없으므로, 이벤트 리스너 부착 대신 다운로드 핸들러만 준비합니다.
+        // Step 3에서는 폼 필드가 없으므로, 이벤트 리스너 부착 대신 다운로드 핸들러만 준비합니다.
         // 버튼 클릭 이벤트는 main.js에서 처리합니다.
     }
     
@@ -316,7 +266,7 @@ export class FormRenderer {
         } else if (currentStep === 3) {
             return this.validateAndShowFeedback(this.config.step3, 3);
         } else {
-            return true; // Step4 기본적으로 통과
+            return true;
         }
     }
 

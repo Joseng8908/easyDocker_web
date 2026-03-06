@@ -20,7 +20,7 @@ const HLJS_THEME_LINK_ID = 'hljs-theme-link';
 // 앱의 상태를 저장할 객체
 const state = {
     currentStep: 1,
-    maxSteps: 4, 
+    maxSteps: 3, 
     configData: {
         step1: {
             baseImage: 'alpine:latest',
@@ -41,7 +41,6 @@ const state = {
 // 모듈 인스턴스 변수
 let formRenderer; 
 let finalDockerfileContent = '';
-let finalMakefileContent = '';
 let storageManager = new StorageManager();
 let sidebar;
 let currentProjectId = 'default_starter_project'; // 기본 프로젝트 ID
@@ -57,20 +56,13 @@ function updateCodePreview(configData) {
     const generator = new TemplateGenerator();
 
     let dockerfileContent = '';
-    let makefileContent = ''; // 💡 Makefile 변수 추가
 
     // Step 1과 2가 완료되었을 때 Dockerfile 생성 가능
     if (safeConfig.step1 && safeConfig.step2) { 
         dockerfileContent = generator.generateDockerfile(safeConfig);
     }
-    
-    // Step 3이 완료되었을 때 Makefile 생성 가능 (Step 1, 2가 필수)
-    if (safeConfig.step1 && safeConfig.step2 && safeConfig.step3) {
-        makefileContent = generator.generateMakefile(safeConfig);
-    }
 
     finalDockerfileContent = dockerfileContent;
-    finalMakefileContent = makefileContent;
     
     storageManager.saveProject(currentProjectId, state.configData); // 상태 저장
     
@@ -87,7 +79,7 @@ function updateCodePreview(configData) {
         }
     }
     
-    // Dockerfile 프리뷰 업데이트 (이전 로직 유지)
+    // Dockerfile 프리뷰 업데이트
     const dockerfileElement = document.getElementById('dockerfile-preview');
     if (dockerfileElement) {
         dockerfileElement.textContent = dockerfileContent || 'Dockerfile 코드가 여기에 표시됩니다.';
@@ -95,37 +87,23 @@ function updateCodePreview(configData) {
         delete dockerfileElement.dataset.highlighted;
     }
 
-    // 💡 Makefile 프리뷰 업데이트
-    const makefileElement = document.getElementById('makefile-preview');
-    if (makefileElement) {
-        makefileElement.textContent = makefileContent || 'Makefile 코드가 여기에 표시됩니다.';
-    
-        delete makefileElement.dataset.highlighted;
-    }
-
     // 코드 하이라이팅 적용
     if (window.hljs) {
-        // 💡 수정: highlightAll() 대신 개별 요소를 대상으로 명시적 호출
         if (dockerfileElement) {
-            hljs.highlightElement(dockerfileElement); // 이 요소만 정확히 재하이라이팅
-        }
-        if (makefileElement) {
-            hljs.highlightElement(makefileElement); // 이 요소만 정확히 재하이라이팅
+            hljs.highlightElement(dockerfileElement);
         }
     }
 }
 
 /**
- * Step 4에서 다운로드 버튼 클릭을 처리합니다.
- * @param {string} type - 다운로드할 파일 종류 ('dockerfile' 또는 'makefile')
+ * Step 3에서 다운로드 버튼 클릭을 처리합니다.
+ * @param {string} type - 다운로드할 파일 종류 ('dockerfile')
  */
 function handleDownload(type) {
     const downloader = new Downloader();
     
     if (type === 'dockerfile' && finalDockerfileContent) {
         downloader.saveFile('Dockerfile', finalDockerfileContent);
-    } else if (type === 'makefile' && finalMakefileContent) {
-        downloader.saveFile('Makefile', finalMakefileContent);
     } else {
         alert('아직 코드가 생성되지 않았거나 비어 있습니다. 이전 단계를 확인해 주세요.');
     }
@@ -209,24 +187,20 @@ function renderCurrentStep() {
         }
     } else {
         setNextButtonDisabledState(false); // 마지막 단계에서는 비활성화
-        // Step 4에서는 이전/다음 버튼 숨기기
+        // Step 3에서는 이전/다음 버튼 숨기기
         if (actionButtons) {
             actionButtons.classList.add('hidden');
         }
     }
 
-    if (state.currentStep === state.maxSteps) { // state.maxSteps = 4
+    if (state.currentStep === state.maxSteps) { // state.maxSteps = 3
         const downloadDockerfileBtn = document.getElementById('download-dockerfile');
-        const downloadMakefileBtn = document.getElementById('download-makefile');
 
         if (downloadDockerfileBtn) {
             downloadDockerfileBtn.addEventListener('click', () => handleDownload('dockerfile'));
         }
-        if (downloadMakefileBtn) {
-            downloadMakefileBtn.addEventListener('click', () => handleDownload('makefile'));
-        }
         
-        // Step 4에서는 '다음' 버튼은 항상 비활성화 상태로 유지
+        // Step 3에서는 '다음' 버튼은 항상 비활성화 상태로 유지
         setNextButtonDisabledState(false); 
     }
 
@@ -345,7 +319,6 @@ function createDefaultProject() {
             runPortMap: '8080:3000',
             runVolume: ''
         },
-        step4: {},
         currentStep: 1
     };
 
@@ -401,7 +374,6 @@ function createNewProjectWithPrompt() {
             runPortMap: '8080:3000',
             runVolume: ''
         },
-        step4: {},
         currentStep: 1
     };
 
